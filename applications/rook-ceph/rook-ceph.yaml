@@ -16,6 +16,9 @@ spec:
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/rook-ceph/rook-ceph/
   destination:
     name: in-cluster
     namespace: rook-ceph
