@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: "9.0.3"
+    chart: argo-cd
+    helm:
+      valueFiles:
+      - $values/values/argocd/argocd/base/values.yaml
+      - $values/values/argocd/argocd/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    server: in-cluster
+    namespace: argocd
+  syncPolicy:
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - CreateNamespace=true

@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aoa
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    name: in-cluster
+  project: default
+  source:
+    repoURL: https://github.com/Haibread/homelab-infra.git
+    path: applications/
+    targetRevision: "HEAD"
+    directory:
+      recurse: true
+  syncPolicy:
+    #automated: {}
