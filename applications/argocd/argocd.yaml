@@ -17,7 +17,7 @@ spec:
     targetRevision: "main"
     ref: values
   destination:
-    server: in-cluster
+    name: in-cluster
     namespace: argocd
   syncPolicy:
     #automated:
