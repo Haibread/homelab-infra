@@ -22,9 +22,9 @@ spec:
   syncPolicy:
     managedNamespaceMetadata:
       labels:
-        pod-security.kubernetes.io/enforce=privileged
+        pod-security.kubernetes.io/enforce: privileged
     #automated:
     #  selfHeal: true
     #  prune: true
-    #syncOptions:
-    #- ServerSideApply=true
+    syncOptions:
+    - CreateNamespace=true
