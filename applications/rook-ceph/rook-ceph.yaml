@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://charts.rook.io/release
+    targetRevision: "1.18.4"
+    chart: rook-ceph
+    helm:
+      valueFiles:
+      - $values/values/rook-ceph/rook-ceph/base/values.yaml
+      - $values/values/rook-ceph/rook-ceph/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: rook-ceph
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce=privileged
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    #syncOptions:
+    #- ServerSideApply=true
