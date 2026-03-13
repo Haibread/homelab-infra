@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-multus-ds
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: install-cni
+        image: ghcr.io/siderolabs/install-cni:v1.7.0
+        command:
+        - /install-cni.sh
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: cnibin
+          mountPath: /host/opt/cni/bin
+          mountPropagation: Bidirectional
