@@ -1,0 +1,4 @@
+---
+# CNI binary and config paths for standard Kubernetes clusters
+hostCNIBinDir: /opt/cni/bin
+hostCNINetDir: /etc/cni/net.d

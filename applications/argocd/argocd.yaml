@@ -24,4 +24,10 @@ spec:
     #  selfHeal: true
     #  prune: true
     syncOptions:
+    - ApplyOutOfSyncOnly=true
     - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

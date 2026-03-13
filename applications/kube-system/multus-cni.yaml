@@ -1,21 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cilium
+  name: multus-cni
   namespace: argocd
 spec:
   project: default
   sources:
-  - repoURL: https://helm.cilium.io/
-    targetRevision: "1.18.0"
-    chart: cilium
+  - repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: "2.2.22"
+    chart: multus-cni
     helm:
       valueFiles:
-      - $values/values/kube-system/cilium/base/values.yaml
-      - $values/values/kube-system/cilium/homelab/values.yaml
+      - $values/values/kube-system/multus-cni/base/values.yaml
+      - $values/values/kube-system/multus-cni/homelab/values.yaml
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/kube-system/multus-cni/
   destination:
     name: in-cluster
     namespace: kube-system
