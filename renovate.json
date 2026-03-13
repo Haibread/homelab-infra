@@ -5,7 +5,8 @@
   ],
   "argocd": {
     "managerFilePatterns": [
-      "/applications/.+\\.yaml$"
+      "/^applications/.+\\.yaml$/",
+      "/^applications/.+\\.yml$/"
     ]
   }
 }
