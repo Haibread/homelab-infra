@@ -1,0 +1,18 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+spec:
+  bgpInstances:
+  - name: "65000"
+    localASN: 65001
+    localPort: 179
+    peers:
+    - name: "peer-65001-udm"
+      peerASN: 65000
+      autoDiscovery:
+        mode: "DefaultGateway"
+        defaultGateway:
+          addressFamily: ipv4
+      peerConfigRef:
+        name: "cilium-peer"
