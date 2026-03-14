@@ -1,7 +1,7 @@
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
 metadata:
-  name: 110-k8s-loadbalancers
+  name: 111-masters
   namespace: default
 spec:
   config: '{"cniVersion":"0.3.1","name":"111-masters","type":"bridge","bridge":"br-int","promiscMode":true,"vlan":111,"ipam":{}}'
