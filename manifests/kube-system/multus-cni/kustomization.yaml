@@ -42,7 +42,13 @@ patches:
                   - name: host-run-netns
                     mountPath: /run/netns
                     mountPropagation: HostToContainer
+                  - name: host-run-netns-varrun
+                    mountPath: /var/run/netns
+                    mountPropagation: HostToContainer
             volumes:
               - name: host-run-netns
                 hostPath:
-                  path: /var/run/netns/
+                  path: /run/netns/
+              - name: host-run-netns-varrun
+                hostPath:
+                  path: /run/netns/
