@@ -8,7 +8,7 @@ spec:
   sources:
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
-    path: manifests/kubevirt
+    path: manifests/kubevirt/kubevirt
   destination:
     name: in-cluster
     namespace: kubevirt
