@@ -269,8 +269,6 @@ spec:
     # nodes below will be used as storage resources.  Each node's 'name' field should match their 'kubernetes.io/hostname' label.
     nodes:
       - name: blade-244
-        labels:
-          topology.kubernetes.io/zone: rack-1
         devices:
           - name: "/dev/disk/by-id/wwn-0x500117310042585c"
           - name: "/dev/disk/by-id/wwn-0x5001173100425ba4"
