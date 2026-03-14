@@ -1,2 +1,11 @@
 resources:
   - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+patches: # Temp
+  - patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --kubelet-insecure-tls
+    target:
+      kind: Deployment
+      name: metrics-server
