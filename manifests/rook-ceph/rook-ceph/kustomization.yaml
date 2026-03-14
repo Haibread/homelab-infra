@@ -2,6 +2,6 @@ resources:
   - cluster.yaml
   - cephblockpool.yaml
   - storageclass-default.yaml
-  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v8.5.0/client/config/crd/
-  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v8.5.0/deploy/kubernetes/snapshot-controller/
-  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v8.5.0/deploy/kubernetes/csi-snapshotter/
+  - https://github.com/kubernetes-csi/external-snapshotter/client/config/crd?ref=v8.5.0
+  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/snapshot-controller?ref=v8.5.0
+  - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/csi-snapshotter?ref=v8.5.0
