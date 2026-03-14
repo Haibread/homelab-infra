@@ -3,6 +3,7 @@ resources:
   - nad-10-servers.yaml
   - nad-11-computers.yaml
   - nad-110-k8s-loadbalancer.yaml
+  - nad-111-masters.yaml
 
 images:
   - name: ghcr.io/k8snetworkplumbingwg/multus-cni
