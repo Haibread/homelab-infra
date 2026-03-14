@@ -12,6 +12,7 @@ spec:
   destination:
     name: in-cluster
     namespace: kube-system
+  syncPolicy:
     #automated:
     #  selfHeal: true
     #  prune: true
