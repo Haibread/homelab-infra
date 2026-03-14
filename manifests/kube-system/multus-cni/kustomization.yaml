@@ -13,6 +13,10 @@ patches:
       kind: DaemonSet
       name: kube-multus-ds
     patch: |
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: kube-multus-ds
       spec:
         template:
           spec:
