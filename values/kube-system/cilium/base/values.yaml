@@ -33,3 +33,5 @@ cni:
 socketLB:
   enabled: true
   hostNamespaceOnly: true
+bpf:
+  vlanBypass: 0
