@@ -30,3 +30,6 @@ bgpControlPlane:
   enabled: true
 cni:
   exclusive: false
+socketLB:
+  enabled: true
+  hostNamespaceOnly: true
