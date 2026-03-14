@@ -1,2 +1,6 @@
 resources:
   - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/v4.2.4/deployments/multus-daemonset-thick.yml
+
+images:
+  - name: ghcr.io/k8snetworkplumbingwg/multus-cni
+    newTag: v4.2.4
