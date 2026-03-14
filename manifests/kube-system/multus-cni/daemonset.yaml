@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: bridge-vlan-config
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: bridge-vlan-config
+  template:
+    metadata:
+      labels:
+        app: bridge-vlan-config
+    spec:
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+        - operator: Exists
+      initContainers:
+        - name: bridge-vlan-setup
+          image: nicolaka/netshoot:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              sleep infinity
+              # Allow all VLANs on the bridge itself (br-int)
+              # https://github.com/siderolabs/talos/issues/9117
+              bridge vlan add dev br-int vid 10 self
+              bridge vlan add dev br-int vid 11 self
+              bridge vlan add dev br-int vid 110 self
+              bridge vlan add dev br-int vid 111 self
+
+              bridge vlan add dev bond.int vid 10 master
+              bridge vlan add dev bond.int vid 11 master
+              bridge vlan add dev bond.int vid 110 master
+              bridge vlan add dev bond.int vid 111 master
+
+              echo "Bridge VLAN config done"
+              bridge vlan show
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: host
+              mountPath: /host
+      containers:
+        - name: pause
+          image: gcr.io/google_containers/pause:3.1
+      volumes:
+        - name: host
+          hostPath:
+            path: /
