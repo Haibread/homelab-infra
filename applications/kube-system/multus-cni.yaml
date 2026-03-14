@@ -6,16 +6,6 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: registry-1.docker.io/bitnamicharts
-    targetRevision: "2.2.22"
-    chart: multus-cni
-    helm:
-      valueFiles:
-      - $values/values/kube-system/multus-cni/base/values.yaml
-      - $values/values/kube-system/multus-cni/homelab/values.yaml
-  - repoURL: https://github.com/Haibread/homelab-infra.git
-    targetRevision: "main"
-    ref: values
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     path: manifests/kube-system/multus-cni/

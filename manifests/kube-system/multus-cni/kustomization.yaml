@@ -1,0 +1,2 @@
+resources:
+  - https://github.com/k8snetworkplumbingwg/multus-cni/blob/v4.2.4/deployments/multus-daemonset-thick.yml
