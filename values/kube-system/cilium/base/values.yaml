@@ -34,4 +34,4 @@ socketLB:
   enabled: true
   hostNamespaceOnly: true
 bpf:
-  vlanBypass: 0
+  vlanBypass: [0]
