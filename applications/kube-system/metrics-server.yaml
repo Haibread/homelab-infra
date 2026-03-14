@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics-server
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/kube-system/metrics-server
+  destination:
+    name: in-cluster
+    namespace: kube-system
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
