@@ -1,5 +1,8 @@
 resources:
   - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/v4.2.4/deployments/multus-daemonset-thick.yml
+  - nad-10-servers.yaml
+  - nad-11-computer.yaml
+  - nad-110-k8s-loadbalancer.yaml
 
 images:
   - name: ghcr.io/k8snetworkplumbingwg/multus-cni
