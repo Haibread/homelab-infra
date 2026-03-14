@@ -8,5 +8,8 @@
       "/^applications/.+\\.yaml$/",
       "/^applications/.+\\.yml$/"
     ]
+  },
+  "kustomize": {
+    "enabled": true
   }
 }
