@@ -7,3 +7,22 @@ resources:
 images:
   - name: ghcr.io/k8snetworkplumbingwg/multus-cni
     newTag: v4.2.4
+
+patches:
+  - target:
+      kind: DaemonSet
+      name: kube-multus-ds
+    patch: |
+      spec:
+        template:
+          spec:
+            containers:
+              - name: kube-multus
+                volumeMounts:
+                  - name: host-run-netns
+                    mountPath: /run/netns
+                    mountPropagation: HostToContainer
+            volumes:
+              - name: host-run-netns
+                hostPath:
+                  path: /var/run/netns/
