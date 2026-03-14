@@ -25,7 +25,7 @@ spec:
   # This means Ceph's status could be degraded and we don't recommend upgrading but you might decide otherwise
   # Use at your OWN risk
   # To understand Rook's upgrade process of Ceph, read https://rook.io/docs/rook/latest/ceph-upgrade.html#ceph-version-upgrades
-  skipUpgradeChecks: false
+  skipUpgradeChecks: true # Temp
   # Whether or not continue if PGs are not clean during an upgrade
   continueUpgradeAfterChecksEvenIfNotHealthy: false
   # WaitTimeoutForHealthyOSDInMinutes defines the time (in minutes) the operator would wait before an OSD can be stopped for upgrade or restart.
@@ -64,7 +64,7 @@ spec:
     # serve the dashboard at the given port.
     # port: 8443
     # serve the dashboard using SSL
-    ssl: true
+    ssl: false
     # The url of the Prometheus instance
     # prometheusEndpoint: <protocol>://<prometheus-host>:<port>
     # Whether SSL should be verified if the Prometheus server is using https
