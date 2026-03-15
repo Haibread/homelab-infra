@@ -1,5 +1,6 @@
 resources:
   - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/v4.2.4/deployments/multus-daemonset-thick.yml
+  - daemonset.yaml
   - nad-1-native.yaml
   - nad-10-servers.yaml
   - nad-11-computers.yaml
