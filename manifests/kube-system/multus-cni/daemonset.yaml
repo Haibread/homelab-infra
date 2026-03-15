@@ -23,7 +23,6 @@ spec:
             - /bin/sh
             - -c
             - |
-              sleep infinity
               # Allow all VLANs on the bridge itself (br-int)
               # https://github.com/siderolabs/talos/issues/9117
               bridge vlan add dev br-int vid 10 self
