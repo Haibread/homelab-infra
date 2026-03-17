@@ -13,4 +13,4 @@ spec:
     #pg_num: '128'
     #pgp_num: '128'
     target_size_ratio: '0.8'
-  deviceClass: hdd
+  deviceClass: ssd
