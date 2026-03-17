@@ -8,7 +8,7 @@ spec:
   sources:
   - repoURL: https://istio-release.storage.googleapis.com/charts
     targetRevision: "1.29.1"
-    chart: istio-ambient
+    chart: ambient
     helm: {}
       #valueFiles:
       #- $values/values/istio-system/istio/base/values.yaml
