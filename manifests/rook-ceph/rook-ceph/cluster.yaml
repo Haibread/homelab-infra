@@ -285,6 +285,12 @@ spec:
           - name: "/dev/disk/by-id/wwn-0x5001173100426ec8"
           - name: "/dev/disk/by-id/wwn-0x5001173100426758"
           - name: "/dev/disk/by-id/wwn-0x5001173100426a70"
+      - name: blade-242
+        devices:
+          - name: "/dev/disk/by-id/wwn-0x5001173100426ad0"
+          - name: "/dev/disk/by-id/wwn-0x50011731004270bc"
+          - name: "/dev/disk/by-id/wwn-0x5001173100426a34"
+          - name: "/dev/disk/by-id/wwn-0x5001173100426b5c"
 
     # nodes:
     #   - name: "172.17.4.201"
