@@ -274,6 +274,18 @@ spec:
           - name: "/dev/disk/by-id/wwn-0x5001173100425ba4"
           - name: "/dev/disk/by-id/wwn-0x5001173100427284"
           - name: "/dev/disk/by-id/wwn-0x5001173100427514"
+      - name: blade-243
+        devices:
+          - name: "/dev/disk/by-id/wwn-0x50011731004267bc"
+          - name: "/dev/disk/by-id/wwn-0x5001173100427674"
+          - name: "/dev/disk/by-id/wwn-0x50011731004276b0"
+      - name: blade-241
+        devices:
+          - name: "/dev/disk/by-id/wwn-0x50011731004274c4"
+          - name: "/dev/disk/by-id/wwn-0x5001173100426ec8"
+          - name: "/dev/disk/by-id/wwn-0x5001173100426758"
+          - name: "/dev/disk/by-id/wwn-0x5001173100426a70"
+
     # nodes:
     #   - name: "172.17.4.201"
     #     devices: # specific devices to use for storage can be specified for each node
