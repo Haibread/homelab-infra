@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: knative-operator
+  name: kserve
   namespace: argocd
 spec:
   project: default
@@ -24,7 +24,7 @@ spec:
   #  path: manifests/knative-operator/knative-operator/
   destination:
     name: in-cluster
-    namespace: knative-operator
+    namespace: kserve
   syncPolicy:
     #automated:
     #  selfHeal: true
