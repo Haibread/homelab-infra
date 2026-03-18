@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://charts.jetstack.io
+    targetRevision: "1.20.0"
+    chart: cert-manager
+    helm: {}
+      #valueFiles:
+      #- $values/values/knative-operator/knative-operator/base/values.yaml
+      #- $values/values/knative-operator/knative-operator/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  #- repoURL: https://github.com/Haibread/homelab-infra.git
+  #  targetRevision: "main"
+  #  path: manifests/knative-operator/knative-operator/
+  destination:
+    name: in-cluster
+    namespace: cert-manager
+  syncPolicy:
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
