@@ -9,10 +9,10 @@ spec:
   - repoURL: https://charts.jetstack.io
     targetRevision: "1.20.0"
     chart: cert-manager
-    helm: {}
-      #valueFiles:
-      #- $values/values/knative-operator/knative-operator/base/values.yaml
-      #- $values/values/knative-operator/knative-operator/homelab/values.yaml
+    helm: 
+      valueFiles:
+      - $values/values/cert-manager/cert-manager/base/values.yaml
+      - $values/values/cert-manager/cert-manager/homelab/values.yaml
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
