@@ -1,0 +1,2 @@
+resources:
+  - https://github.com/kserve/kserve/tree/master/config/runtimes?ref=v0.17.0
