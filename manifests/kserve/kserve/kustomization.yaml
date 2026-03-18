@@ -1,2 +1,2 @@
 resources:
-  - https://github.com/kserve/kserve/tree/master/config/runtimes?ref=v0.17.0
+  - https://github.com/kserve/kserve/blob/master/config/runtimes/kustomization.yaml
