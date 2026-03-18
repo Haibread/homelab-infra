@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: https://helm.knative-operator.io/
-    targetRevision: "1.19.1"
+  - repoURL: https://knative.github.io/operator
+    targetRevision: "1.21.1"
     chart: knative-operator
     helm: {}
       #valueFiles:
