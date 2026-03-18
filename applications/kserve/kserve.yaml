@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: oci://ghcr.io/kserve/charts/kserve-resources
+  - repoURL: oci://ghcr.io/kserve/charts/kserve-crd
     targetRevision: v0.17.0
     chart: kserve-crd
     helm: {}
