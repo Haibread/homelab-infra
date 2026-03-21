@@ -1,0 +1,27 @@
+	
+
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStore
+metadata:
+  name: main
+  namespace: rook-ceph
+spec:
+  metadataPool:
+    failureDomain: host
+    replicated:
+      size: 3
+  dataPool:
+    failureDomain: host
+    # For production it is recommended to use more chunks, such as 4+2 or 8+4
+    erasureCoded:
+      dataChunks: 2
+      codingChunks: 1
+    parameters:
+      # Ceph Tentacle v20 has optimizations that need to be explicitly enabled
+      allow_ec_optimizations: "true"
+  preservePoolsOnDelete: false
+  gateway:
+    # sslCertificateRef:
+    port: 80
+    # securePort: 443
+    instances: 3
