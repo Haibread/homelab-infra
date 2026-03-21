@@ -4,6 +4,7 @@ resources:
   #- cephblockpool-nvme.yaml
   - cephobjectstore-main.yaml
   - storageclass-default.yaml
+  - bucket-storage-class.yaml
   - https://github.com/kubernetes-csi/external-snapshotter/client/config/crd?ref=v8.5.0
   - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/snapshot-controller?ref=v8.5.0
   - https://github.com/kubernetes-csi/external-snapshotter/deploy/kubernetes/csi-snapshotter?ref=v8.5.0
