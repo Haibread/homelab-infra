@@ -1,10 +1,11 @@
 apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
-  name: loki-data
+  name: loki-chunks
 spec:
-  bucketName: my-loki-data             # actual S3 bucket name
+  bucketName: loki-chunks
   storageClassName: rook-ceph-bucket-main
-  # additionalConfig:
+  additionalConfig:
+    bucketOwner: loki-user
   #   maxSize: "10G"
   #   maxObjects: "10000"

@@ -1,0 +1,11 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: loki-ruler
+spec:
+  bucketName: loki-ruler
+  storageClassName: rook-ceph-bucket-main
+  additionalConfig:
+    bucketOwner: loki-user
+  #   maxSize: "10G"
+  #   maxObjects: "10000"
