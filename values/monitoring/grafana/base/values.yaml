@@ -1,0 +1,35 @@
+replicas: 2
+
+#serviceMonitor:
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 256Mi
+
+persistence:
+  enabled: false # Will use pg
+
+grafana.ini:
+  database:
+    type: postgres
+    host: grafana-pg-rw.monitoring.svc.cluster.local:5432
+    name: grafana
+    user: grafana
+    ssl_mode: require     # CNPG enables TLS by default
+
+datasources: {}
+
+dashboardProviders: {}
+
+sidecar:
+  alerts:
+    enabled: true
+  dashboards:
+    enabled: true
+  datasources:
+    enabled: true
+  plugins:
+    enabled: true

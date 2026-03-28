@@ -1,0 +1,25 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: grafana-pg
+  namespace: monitoring
+spec:
+  instances: 3
+
+  storage:
+    size: 10Gi
+
+#  postgresql:
+#    parameters:
+#      max_connections: "200"
+#      shared_buffers: "256MB"
+#
+#  monitoring:
+#    enablePodMonitor: true   # if you have Prometheus Operator
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
