@@ -38,12 +38,14 @@ loki:
     split_queries_by_interval: 15m
     query_timeout: 300s
     volume_enabled: true
-    retention_enabled: true
     retention_period: 336h # 2 weeks
 
   commonConfig:
     path_prefix: /var/loki
     replication_factor: 2
+
+  compactor:
+    retention_enabled: true
 
   storage:
     type: s3
