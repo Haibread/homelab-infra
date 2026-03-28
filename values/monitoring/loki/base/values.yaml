@@ -1,0 +1,82 @@
+deploymentMode: SimpleScalable
+
+global:
+  extraEnv:
+    - name: CHUNKS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: rook-ceph-object-user-main-loki-chunks
+          key: AccessKey
+    - name: CHUNKS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: rook-ceph-object-user-main-loki-chunks
+          key: SecretKey
+    - name: RULER_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: rook-ceph-object-user-main-loki-ruler
+          key: AccessKey
+    - name: RULER_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: rook-ceph-object-user-main-loki-ruler
+          key: SecretKey
+
+loki:
+  auth_enabled: true 
+
+  # Use structuredConfig so we can use ${ENV_VAR} interpolation.
+  # structuredConfig takes full precedence over loki.config and loki.storage.
+  structuredConfig:
+    #auth_enabled: false
+
+    #server:
+    #  http_listen_port: 3100
+    #  grpc_listen_port: 9095
+    #  http_server_read_timeout: 600s
+    #  http_server_write_timeout: 600s
+
+  limits_config:
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h
+    max_cache_freshness_per_query: 10m
+    split_queries_by_interval: 15m
+    query_timeout: 300s
+    volume_enabled: true
+
+  commonConfig:
+    path_prefix: /var/loki
+    replication_factor: 2
+
+  storage:
+    type: s3
+    s3:
+      endpoint: http://rook-ceph-rgw-my-main.rook-ceph.svc.cluster.local:80
+      region: us-east-1
+      accessKeyId: ${ACCESS_KEY_ID}
+      secretAccessKey: ${SECRET_ACCESS_KEY}
+      s3ForcePathStyle: true
+      insecure: true
+    bucketNames:
+      chunks: loki-chunks
+      ruler:  loki-ruler
+
+  schema_config:
+    configs:
+      - from: "2026-03-03"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h
+    
+  ui:
+    enabled: true
+
+  query_range:
+    align_queries_with_step: true
+
+write:
+  
