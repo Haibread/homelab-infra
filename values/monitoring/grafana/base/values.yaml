@@ -16,9 +16,23 @@ grafana.ini:
   database:
     type: postgres
     host: grafana-pg-rw.monitoring.svc.cluster.local:5432
-    name: grafana
+    name: app
     user: grafana
     ssl_mode: require     # CNPG enables TLS by default
+
+env:
+  GF_DATABASE_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: grafana-pg-app
+        key: password
+
+extraConfigmapMounts:
+  - name: cnpg-ca
+    mountPath: /etc/ssl/certs/cnpg-ca.crt
+    subPath: ca.crt
+    configMap: grafana-pg-ca
+    readOnly: true
 
 datasources: {}
 
