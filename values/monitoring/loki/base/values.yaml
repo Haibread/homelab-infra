@@ -5,24 +5,24 @@ global:
     - -config.expand-env=true
 
 chunks_bucket_env: &chunks_bucket_env
-    - name: CHUNKS_ACCESS_KEY_ID
+    - name: AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
           name: loki-chunks
           key: AWS_ACCESS_KEY_ID
-    - name: CHUNKS_SECRET_ACCESS_KEY
+    - name: AWS_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
           name: loki-chunks
           key: AWS_SECRET_ACCESS_KEY
 
 ruler_bucket_env: &ruler_bucket_env
-    - name: RULER_ACCESS_KEY_ID
+    - name: AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
           name: loki-ruler
           key: AWS_ACCESS_KEY_ID
-    - name: RULER_SECRET_ACCESS_KEY
+    - name: AWS_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
           name: loki-ruler
@@ -48,8 +48,8 @@ loki:
     s3:
       endpoint: http://rook-ceph-rgw-my-main.rook-ceph.svc.cluster.local:80
       region: us-east-1
-      accessKeyId: ${ACCESS_KEY_ID}
-      secretAccessKey: ${SECRET_ACCESS_KEY}
+      accessKeyId: ${AWS_ACCESS_KEY_ID}
+      secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
       s3ForcePathStyle: true
       insecure: true
     bucketNames:
