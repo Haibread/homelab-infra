@@ -95,6 +95,7 @@ compactor:
 indexGateway:
   replicas: 2
   maxUnavailable: 1
+  extraEnv: *chunks_bucket_env
 ruler:
   replicas: 2
   maxUnavailable: 1
