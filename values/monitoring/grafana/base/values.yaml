@@ -26,11 +26,10 @@ envValueFrom:
   #    secretKeyRef:
   #      name: grafana-pg-app
   #      key: password
-  - name: GF_DATABASE_URL
-    valueFrom:
-      secretKeyRef:
-        name: grafana-pg-app
-        key: fqdn-uri
+  GF_DATABASE_URL:
+    secretKeyRef:
+      name: grafana-pg-app
+      key: fqdn-uri
 
 extraSecretMounts:
   - name: cnpg-ca
