@@ -1,7 +1,10 @@
-deploymentMode: SimpleScalable
+deploymentMode: Distributed
 
 global:
-  extraEnv:
+  extraArgs:
+    - -config.expand-env=true
+
+chunks_bucket_env: &chunks_bucket_env
     - name: CHUNKS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
@@ -12,6 +15,8 @@ global:
         secretKeyRef:
           name: rook-ceph-object-user-main-loki-chunks
           key: SecretKey
+
+ruler_bucket_env: &ruler_bucket_env
     - name: RULER_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
@@ -25,17 +30,6 @@ global:
 
 loki:
   auth_enabled: true 
-
-  # Use structuredConfig so we can use ${ENV_VAR} interpolation.
-  # structuredConfig takes full precedence over loki.config and loki.storage.
-  structuredConfig:
-    #auth_enabled: false
-
-    #server:
-    #  http_listen_port: 3100
-    #  grpc_listen_port: 9095
-    #  http_server_read_timeout: 600s
-    #  http_server_write_timeout: 600s
 
   limits_config:
     reject_old_samples: true
@@ -60,7 +54,7 @@ loki:
       insecure: true
     bucketNames:
       chunks: loki-chunks
-      ruler:  loki-ruler
+      ruler: loki-ruler
 
   schema_config:
     configs:
@@ -78,5 +72,27 @@ loki:
   query_range:
     align_queries_with_step: true
 
-write:
-  
+ingester:
+  replicas: 3
+  extraEnv: *chunks_bucket_env
+querier:
+  replicas: 3
+  maxUnavailable: 2
+  extraEnv: *chunks_bucket_env
+queryFrontend:
+  replicas: 2
+  maxUnavailable: 1
+queryScheduler:
+  replicas: 2
+distributor:
+  replicas: 3
+  maxUnavailable: 2
+compactor:
+  replicas: 1
+  extraEnv: *chunks_bucket_env
+indexGateway:
+  replicas: 2
+  maxUnavailable: 1
+ruler:
+  replicas: 2
+  extraEnv: *ruler_bucket_env
