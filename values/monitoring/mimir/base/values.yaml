@@ -38,7 +38,7 @@ mimir:
     ruler_storage:
       backend: s3
       s3:
-        endpoint: http://rook-ceph-rgw-main.rook-ceph.svc.cluster.local:80
+        endpoint: rook-ceph-rgw-main.rook-ceph.svc.cluster.local
         region: us-east-1
         access_key_id: ${RULER_AWS_ACCESS_KEY_ID}
         secret_access_key: ${RULER_AWS_SECRET_ACCESS_KEY}
