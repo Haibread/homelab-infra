@@ -8,24 +8,24 @@ chunks_bucket_env: &chunks_bucket_env
     - name: CHUNKS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: rook-ceph-object-user-main-loki-chunks
+          name: loki-chunks
           key: AccessKey
     - name: CHUNKS_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: rook-ceph-object-user-main-loki-chunks
+          name: loki-chunks
           key: SecretKey
 
 ruler_bucket_env: &ruler_bucket_env
     - name: RULER_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: rook-ceph-object-user-main-loki-ruler
+          name: loki-ruler
           key: AccessKey
     - name: RULER_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: rook-ceph-object-user-main-loki-ruler
+          name: loki-ruler
           key: SecretKey
 
 loki:
