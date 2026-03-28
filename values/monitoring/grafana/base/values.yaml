@@ -20,7 +20,7 @@ persistence:
   #  user: app
   #  ssl_mode: require     # CNPG enables TLS by default
 
-env:
+envValueFrom:
   #GF_DATABASE_PASSWORD:
   #  valueFrom:
   #    secretKeyRef:
