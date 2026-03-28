@@ -100,6 +100,9 @@ ruler:
   replicas: 2
   maxUnavailable: 1
   extraEnv: *ruler_bucket_env
+gateway:
+  replicas: 2
+  maxUnavailable: 1
 
 # Zero out replica counts of other deployment modes
 backend:
