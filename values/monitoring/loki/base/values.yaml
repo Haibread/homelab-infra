@@ -75,6 +75,8 @@ loki:
 ingester:
   replicas: 3
   extraEnv: *chunks_bucket_env
+  zoneAwareReplication:
+    enabled: false
 querier:
   replicas: 3
   maxUnavailable: 2
