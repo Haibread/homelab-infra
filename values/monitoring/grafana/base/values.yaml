@@ -13,19 +13,24 @@ persistence:
   enabled: false # Will use pg
 
 grafana.ini:
-  database:
-    type: postgres
-    host: grafana-pg-rw.monitoring.svc.cluster.local:5432
-    name: app
-    user: app
-    ssl_mode: require     # CNPG enables TLS by default
+  #database:
+  #  type: postgres
+  #  host: grafana-pg-rw.monitoring.svc.cluster.local:5432
+  #  name: app
+  #  user: app
+  #  ssl_mode: require     # CNPG enables TLS by default
 
 env:
-  GF_DATABASE_PASSWORD:
+  #GF_DATABASE_PASSWORD:
+  #  valueFrom:
+  #    secretKeyRef:
+  #      name: grafana-pg-app
+  #      key: password
+  GF_DATABASE_URL:
     valueFrom:
       secretKeyRef:
         name: grafana-pg-app
-        key: password
+        key: fqdn-uri
 
 extraSecretMounts:
   - name: cnpg-ca
