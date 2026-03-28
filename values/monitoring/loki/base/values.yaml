@@ -95,4 +95,5 @@ indexGateway:
   maxUnavailable: 1
 ruler:
   replicas: 2
+  maxUnavailable: 1
   extraEnv: *ruler_bucket_env
