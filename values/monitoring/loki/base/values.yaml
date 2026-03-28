@@ -46,7 +46,7 @@ loki:
   storage:
     type: s3
     s3:
-      endpoint: http://rook-ceph-rgw-my-main.rook-ceph.svc.cluster.local:80
+      endpoint: http://rook-ceph-rgw-main.rook-ceph.svc.cluster.local:80
       region: us-east-1
       accessKeyId: ${AWS_ACCESS_KEY_ID}
       secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
