@@ -12,7 +12,7 @@ resources:
 persistence:
   enabled: false # Will use pg
 
-grafana.ini:
+#grafana.ini:
   #database:
   #  type: postgres
   #  host: grafana-pg-rw.monitoring.svc.cluster.local:5432
