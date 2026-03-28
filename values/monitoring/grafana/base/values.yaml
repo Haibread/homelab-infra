@@ -27,11 +27,11 @@ env:
         name: grafana-pg-app
         key: password
 
-extraConfigmapMounts:
+extraSecretMounts:
   - name: cnpg-ca
     mountPath: /etc/ssl/certs/cnpg-ca.crt
     subPath: ca.crt
-    configMap: grafana-pg-ca
+    secretName: grafana-pg-ca
     readOnly: true
 
 datasources: {}
