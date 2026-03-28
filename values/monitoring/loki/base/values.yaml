@@ -89,11 +89,14 @@ querier:
 queryFrontend:
   replicas: 2
   maxUnavailable: 1
+  extraEnv: *chunks_bucket_env
 queryScheduler:
   replicas: 2
+  extraEnv: *chunks_bucket_env
 distributor:
   replicas: 3
   maxUnavailable: 2
+  extraEnv: *chunks_bucket_env
 compactor:
   replicas: 1
   extraEnv: *chunks_bucket_env
