@@ -17,7 +17,7 @@ grafana.ini:
     type: postgres
     host: grafana-pg-rw.monitoring.svc.cluster.local:5432
     name: app
-    user: grafana
+    user: app
     ssl_mode: require     # CNPG enables TLS by default
 
 env:
