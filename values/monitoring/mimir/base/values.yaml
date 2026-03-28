@@ -55,8 +55,8 @@ mimir:
     ingester:
       push_grpc_method_enabled: null
 
-    kafka:
-      enabled: false # Use classic architecture
+kafka:
+  enabled: false # Use classic architecture
 
 alertmanager:
   enabled: false
