@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-grafana-datasource
+  namespace: monitoring
+  labels:
+    grafana_datasource: 'true'
+data:
+  datasource.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      url: "http://loki-gateway.monitoring/"
+      access: proxy
+      jsonData:
+        httpHeaderName1: X-Scope-OrgID
+      secureJsonData:
+        httpHeaderValue1: platform-admin
+      editable: false
