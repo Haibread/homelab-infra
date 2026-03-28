@@ -1,0 +1,7 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: mimir-blocks
+spec:
+  bucketName: mimir-blocks
+  storageClassName: rook-ceph-bucket-main

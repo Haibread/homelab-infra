@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mimir
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://grafana.github.io/helm-charts
+    targetRevision: "6.1.0-weekly.387"
+    chart: mimir-distributed
+    helm:
+      valueFiles:
+      - $values/values/monitoring/mimir/base/values.yaml
+      - $values/values/monitoring/mimir/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/monitoring/mimir
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

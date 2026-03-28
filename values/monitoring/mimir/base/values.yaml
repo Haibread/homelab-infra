@@ -1,0 +1,219 @@
+global_env: &global_env
+  - name: BLOCKS_AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: mimir-blocks
+        key: AWS_ACCESS_KEY_ID
+  - name: BLOCKS_AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mimir-blocks
+        key: AWS_SECRET_ACCESS_KEY
+  - name: RULER_AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: mimir-ruler
+        key: AWS_ACCESS_KEY_ID
+  - name: RULER_AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mimir-ruler
+        key: AWS_SECRET_ACCESS_KEY
+
+global_extraArgs: &global_extraArgs
+  config.expand-env: true
+
+mimir:
+  structuredConfig:
+    blocks_storage:
+      backend: s3
+      s3:
+        endpoint: http://rook-ceph-rgw-main.rook-ceph.svc.cluster.local:80
+        region: us-east-1
+        access_key_id: ${BLOCKS_AWS_ACCESS_KEY_ID}
+        secret_access_key: ${BLOCKS_AWS_SECRET_ACCESS_KEY}
+        bucket_name: mimir-blocks
+
+    ruler_storage:
+      backend: s3
+      s3:
+        endpoint: http://rook-ceph-rgw-main.rook-ceph.svc.cluster.local:80
+        region: us-east-1
+        access_key_id: ${RULER_AWS_ACCESS_KEY_ID}
+        secret_access_key: ${RULER_AWS_SECRET_ACCESS_KEY}
+        bucket_name: mimir-ruler
+
+    # Disables kafka
+    ingest_storage:
+      enabled: false
+      kafka:
+        address: null
+        topic: null
+        auto_create_topic_default_partitions: null
+    distributor:
+      remote_timeout: null
+    ingester:
+      push_grpc_method_enabled: null
+
+    kafka:
+      enabled: false # Use classic architecture
+
+alertmanager:
+  enabled: false
+  persistentVolume:
+    enabled: true
+  replicas: 2
+  resources:
+    limits:
+      memory: 1.4Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+  statefulSet:
+    enabled: true
+
+compactor:
+  persistentVolume:
+    size: 20Gi
+  resources:
+    limits:
+      memory: 2.1Gi
+    requests:
+      cpu: 1
+      memory: 1.5Gi
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+distributor:
+  replicas: 2
+  resources:
+    limits:
+      memory: 5.7Gi
+    requests:
+      cpu: 2
+      memory: 4Gi
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+ingester:
+  persistentVolume:
+    size: 50Gi
+  replicas: 4
+  resources:
+    limits:
+      memory: 12Gi
+    requests:
+      cpu: 3.5
+      memory: 8Gi
+  topologySpreadConstraints: {}
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - ingester
+          topologyKey: "kubernetes.io/hostname"
+
+  zoneAwareReplication:
+    topologyKey: "kubernetes.io/hostname"
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+chunks-cache:
+  enabled: true
+  replicas: 3
+
+index-cache:
+  enabled: true
+  replicas: 3
+
+metadata-cache:
+  enabled: true
+  replicas: 3
+
+results-cache:
+  enabled: true
+  replicas: 3
+
+minio:
+  enabled: false
+
+overrides_exporter:
+  replicas: 1
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+querier:
+  replicas: 1
+  resources:
+    limits:
+      memory: 5.6Gi
+    requests:
+      cpu: 2
+      memory: 4Gi
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+query_frontend:
+  replicas: 1
+  resources:
+    limits:
+      memory: 2.8Gi
+    requests:
+      cpu: 2
+      memory: 2Gi
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+ruler:
+  replicas: 1
+  resources:
+    limits:
+      memory: 2.8Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+store_gateway:
+  persistentVolume:
+    size: 10Gi
+  replicas: 3
+  resources:
+    limits:
+      memory: 2.1Gi
+    requests:
+      cpu: 1
+      memory: 1.5Gi
+  topologySpreadConstraints: {}
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - store-gateway
+          topologyKey: "kubernetes.io/hostname"
+  zoneAwareReplication:
+    topologyKey: "kubernetes.io/hostname"
+  env: *global_env
+  extraArgs: *global_extraArgs
+
+gateway:
+  replicas: 2
+  resources:
+    limits:
+      memory: 731Mi
+    requests:
+      cpu: 1
+      memory: 512Mi
