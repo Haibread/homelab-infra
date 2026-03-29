@@ -3,6 +3,7 @@ serviceMonitor:
 
 sources:
   - ingress
+  - service
   - gateway-httproute
   - gateway-tlsroute
   - gateway-tcproute
@@ -24,3 +25,14 @@ domainFilters:
 
 provider:
   - name: etcd
+
+rbac:
+  create: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
