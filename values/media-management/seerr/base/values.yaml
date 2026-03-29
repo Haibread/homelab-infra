@@ -7,7 +7,7 @@ route:
     enabled: true
     hostnames:
       - seerr.newgamer.lan
-    httpsRedirect: true
+    httpsRedirect: false
     parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
