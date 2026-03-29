@@ -1,0 +1,61 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: etcd-server
+  namespace: external-dns
+spec:
+  secretName: etcd-server-tls
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  commonName: etcd
+  dnsNames:
+  - etcd
+  - etcd.external-dns
+  - etcd.external-dns.svc.cluster.local
+  - etcd-0
+  - etcd-0.etcd
+  - etcd-0.etcd.external-dns
+  - etcd-0.etcd.external-dns.svc
+  - etcd-0.etcd.external-dns.svc.cluster.local
+  - etcd-1
+  - etcd-1.etcd
+  - etcd-1.etcd.external-dns
+  - etcd-1.etcd.external-dns.svc
+  - etcd-1.etcd.external-dns.svc.cluster.local
+  - etcd-2
+  - etcd-2.etcd
+  - etcd-2.etcd.external-dns
+  - etcd-2.etcd.external-dns.svc
+  - etcd-2.etcd.external-dns.svc.cluster.local
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: etcd-client
+  namespace: external-dns
+spec:
+  secretName: etcd-client-tls
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  commonName: etcd
+  dnsNames:
+  - etcd
+  - etcd.external-dns
+  - etcd.external-dns.svc.cluster.local
+  - etcd-0
+  - etcd-0.etcd
+  - etcd-0.etcd.external-dns
+  - etcd-0.etcd.external-dns.svc
+  - etcd-0.etcd.external-dns.svc.cluster.local
+  - etcd-1
+  - etcd-1.etcd
+  - etcd-1.etcd.external-dns
+  - etcd-1.etcd.external-dns.svc
+  - etcd-1.etcd.external-dns.svc.cluster.local
+  - etcd-2
+  - etcd-2.etcd
+  - etcd-2.etcd.external-dns
+  - etcd-2.etcd.external-dns.svc
+  - etcd-2.etcd.external-dns.svc.cluster.local

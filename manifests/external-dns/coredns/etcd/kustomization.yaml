@@ -1,0 +1,4 @@
+resources:
+  - certificates.yaml
+  - service.yaml
+  - statefulset.yaml
