@@ -11,5 +11,8 @@
   },
   "kustomize": {
     "enabled": true
+  },
+  "kubernetes": {
+    "managerFilePatterns": ["/manifests/.+\\.yaml$/"]
   }
 }
