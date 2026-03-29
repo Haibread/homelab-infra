@@ -15,6 +15,11 @@ env:
   - name: ETCD_URLS
     value: https://etcd.external-dns:2379
 
+extraVolumes:
+  - name: etcd-client-tls
+    secret:
+      secretName: etcd-client-tls
+
 extraVolumeMounts:
   - name: etcd-client-tls
     mountPath: /etc/ssl/certs/etcd-client-tls
