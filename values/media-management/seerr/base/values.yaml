@@ -8,7 +8,13 @@ route:
     hostnames:
       - seerr.newgamer.lan
     httpsRedirect: true
-  
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: homelab
+      namespace: envoy-gateway
+      sectionName: https
+
 resources:
   requests:
     cpu: 100m
