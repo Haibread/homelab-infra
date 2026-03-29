@@ -1,0 +1,26 @@
+serviceMonitor:
+  enabled: true
+
+sources:
+  - ingress
+  - gateway-httproute
+  - gateway-tlsroute
+  - gateway-tcproute
+  - gateway-udproute
+
+policy: sync
+
+env:
+  - name: ETCD_URLS
+    value: https://etcd.external-dns:2379
+
+extraVolumeMounts:
+  - name: etcd-client-tls
+    mountPath: /etc/ssl/certs/etcd-client-tls
+    readOnly: true
+
+domainFilters:
+  - newgamer.lan
+
+provider:
+  - name: etcd
