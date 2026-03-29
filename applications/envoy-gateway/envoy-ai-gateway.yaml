@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: envoy-ai-gateway
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: docker.io/envoyproxy
+    targetRevision: "v0.0.5"
+    chart: ai-gateway-helm
+    helm:
+      valueFiles:
+      - $values/values/envoy-gateway/envoy-ai-gateway/base/values.yaml
+      - $values/values/envoy-gateway/envoy-ai-gateway/homelab/values.yaml
+  - repoURL: docker.io/envoyproxy
+    targetRevision: v0.0.5
+    chart: ai-gateway-crds-helm
+    helm: {}
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: envoy-gateway
+  syncPolicy:
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
