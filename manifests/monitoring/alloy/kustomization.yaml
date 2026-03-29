@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: alloy-config
+    files:
+      - config.alloy=config.alloy
+    options:
+      disableNameSuffixHash: true  # Remove if you want content-hash suffixes
