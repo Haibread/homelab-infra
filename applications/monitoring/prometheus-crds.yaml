@@ -16,9 +16,6 @@ spec:
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
-  - repoURL: https://github.com/Haibread/homelab-infra.git
-    targetRevision: "main"
-    path: manifests/monitoring/prometheus-crds
   destination:
     name: in-cluster
     namespace: monitoring
