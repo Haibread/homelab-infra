@@ -47,7 +47,7 @@ servers:
       stubzones
       path /skydns
       endpoint http://etcd.external-dns:2379
-      tls /etc/coredns/tls/etcd-client.crt /etc/coredns/tls/etcd-client.key /etc/coredns/tls/etcd-ca.crt
+      tls /etc/coredns/tls/etcd/tls.crt /etc/coredns/tls/etcd/tls.key /etc/coredns/tls/etcd/ca.crt
 
 extraSecrets:
   - name: etcd-client-tls
