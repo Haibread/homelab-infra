@@ -88,7 +88,7 @@ spec:
         #  value: "http"
         ## TLS: Use this URI_SCHEME for TLS clusters.
         - name: URI_SCHEME
-        value: "https"
+          value: "https"
         command:
         - /usr/local/bin/etcd
         args:
