@@ -16,9 +16,9 @@ spec:
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
-  #- repoURL: https://github.com/Haibread/homelab-infra.git
-  #  targetRevision: "main"
-  #  path: manifests/knative-operator/knative-operator/
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/cert-manager/cert-manager
   destination:
     name: in-cluster
     namespace: cert-manager
