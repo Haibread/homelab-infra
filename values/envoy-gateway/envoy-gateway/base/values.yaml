@@ -54,5 +54,5 @@ config:
           # IMPORTANT: Update this to match your AI Gateway controller service
           # Format: <service-name>.<namespace>.svc.cluster.local
           # Default if you followed the installation steps above:
-          hostname: ai-gateway-controller.envoy-ai-gateway-system.svc.cluster.local
+          hostname: ai-gateway-controller.envoy-gateway.svc.cluster.local
           port: 1063
