@@ -1,7 +1,29 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: etcd-issuer
+  name: selfsigned-issuer
   namespace: external-dns
 spec:
   selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: etcd-ca
+  namespace: external-dns
+spec:
+  isCA: true
+  secretName: etcd-ca-tls
+  commonName: etcd-ca
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: etcd-issuer
+  namespace: external-dns
+spec:
+  ca:
+    secretName: etcd-ca-tls
