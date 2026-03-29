@@ -29,7 +29,7 @@ domainFilters:
   - newgamer.lan
 
 provider:
-  name: etcd
+  name: coredns
 
 rbac:
   create: true
