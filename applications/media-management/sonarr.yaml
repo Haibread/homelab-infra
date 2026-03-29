@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: ghcr.io/bjw-s/helm-charts
+  - repoURL: ghcr.io/bjw-s/helm
     targetRevision: "4.6.2"
     chart: app-template
     helm:
