@@ -152,7 +152,9 @@ spec:
   ## This StatefulSet will uses the volumeClaimTemplate field to create a PVC in
   ## the cluster for each replica. These PVCs can not be easily resized later.
   volumeClaimTemplates:
-  - metadata:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
       name: etcd-data
     spec:
       accessModes: ["ReadWriteOnce"]
