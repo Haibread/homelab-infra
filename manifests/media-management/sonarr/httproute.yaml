@@ -14,5 +14,5 @@ spec:
     - sonarr.newgamer.lan
   rules:
     - backendRefs:
-        - name: sonarr-app
+        - name: sonarr
           port: 8989
