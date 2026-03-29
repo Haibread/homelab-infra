@@ -16,6 +16,9 @@ spec:
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/envoy-gateway/envoy-gateway
   destination:
     name: in-cluster
     namespace: envoy-gateway

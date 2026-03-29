@@ -26,7 +26,7 @@ config:
         redis:
           # Update this URL to match your Redis service location
           # This assumes Redis is deployed using the redis.yaml in this directory
-          url: redis.redis-system.svc.cluster.local:6379
+          url: redis.envoy-gateway.svc.cluster.local:6379
     extensionApis:
       # Not strictly required, but recommended for backward/future compatibility.
       enableEnvoyPatchPolicy: true
