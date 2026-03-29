@@ -24,7 +24,7 @@ domainFilters:
   - newgamer.lan
 
 provider:
-  - name: etcd
+  name: etcd
 
 rbac:
   create: true
