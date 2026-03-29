@@ -25,6 +25,11 @@ extraVolumeMounts:
     mountPath: /etc/ssl/certs/etcd-client-tls
     readOnly: true
 
+extraArgs:
+  tls-ca: /etc/ssl/certs/etcd-client-tls/ca.crt
+  tls-key: /etc/ssl/certs/etcd-client-tls/tls.key
+  tls-cert: /etc/ssl/certs/etcd-client-tls/tls.crt
+
 domainFilters:
   - newgamer.lan
 
