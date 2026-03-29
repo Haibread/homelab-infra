@@ -27,8 +27,8 @@ extraVolumeMounts:
 
 extraArgs:
   tls-ca: /etc/ssl/certs/etcd-client-tls/ca.crt
-  tls-client-cert: /etc/ssl/certs/etcd-client-tls/tls.key
-  tls-client-cert-key: /etc/ssl/certs/etcd-client-tls/tls.crt
+  tls-client-cert: /etc/ssl/certs/etcd-client-tls/tls.crt
+  tls-client-cert-key: /etc/ssl/certs/etcd-client-tls/tls.key
 
 domainFilters:
   - newgamer.lan
