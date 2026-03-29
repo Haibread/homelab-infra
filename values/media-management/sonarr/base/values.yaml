@@ -1,0 +1,49 @@
+controllers:
+  sonarr:
+    containers:
+      app:
+        image:
+          repository: lscr.io/linuxserver/sonarr
+          tag: latest
+        env:
+          PUID: "1000"
+          PGID: "1000"
+          TZ: Europe/Paris
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+
+service:
+  app:
+    controller: sonarr
+    ports:
+      http:
+        port: 8989
+
+persistence:
+  config:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    globalMounts:
+      - path: /config
+  tv:
+    type: nfs
+    server: 192.168.0.95
+    path: /mnt/SAS14T/Media/TVs/Sonarr
+    globalMounts:
+      - path: /tv
+  downloads:
+    type: nfs
+    server: 192.168.0.95
+    path: /mnt/SAS14T/Media/TVs
+    globalMounts:
+      - path: /downloads
