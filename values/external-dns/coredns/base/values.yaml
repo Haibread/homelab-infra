@@ -51,7 +51,7 @@ servers:
     configBlock: |-
       stubzones
       path /skydns
-      endpoint http://etcd.external-dns:2379
+      endpoint https://etcd.external-dns:2379
       tls /etc/coredns/tls/etcd/tls.crt /etc/coredns/tls/etcd/tls.key /etc/coredns/tls/etcd/ca.crt
 
 extraSecrets:
