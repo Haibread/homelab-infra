@@ -1,4 +1,5 @@
 resources:
+  - etcd-issuer.yaml
   - certificates.yaml
   - service.yaml
   - statefulset.yaml

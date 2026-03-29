@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: etcd-server-tls
   issuerRef:
-    name: selfsigned
-    kind: ClusterIssuer
+    name: etcd-selfsigned
+    kind: Issuer
   commonName: etcd
   dnsNames:
   - etcd
@@ -37,8 +37,8 @@ metadata:
 spec:
   secretName: etcd-client-tls
   issuerRef:
-    name: selfsigned
-    kind: ClusterIssuer
+    name: etcd-selfsigned
+    kind: Issuer
   commonName: etcd
   dnsNames:
   - etcd
