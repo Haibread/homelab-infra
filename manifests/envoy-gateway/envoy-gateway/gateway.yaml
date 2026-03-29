@@ -5,6 +5,18 @@ metadata:
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 ---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: homelab-proxy
+  namespace: envoy-gateway
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 2
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -12,6 +24,11 @@ metadata:
   namespace: envoy-gateway
 spec:
   gatewayClassName: envoy
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: homelab-proxy
   listeners:
     - name: http
       protocol: HTTP
