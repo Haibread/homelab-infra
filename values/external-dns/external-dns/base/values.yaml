@@ -14,6 +14,12 @@ policy: sync
 env:
   - name: ETCD_URLS
     value: https://etcd.external-dns:2379
+  - name: ETCD_CA_FILE
+    value: /etc/ssl/certs/etcd-client-tls/ca.crt
+  - name: ETCD_CERT_FILE
+    value: /etc/ssl/certs/etcd-client-tls/tls.crt
+  - name: ETCD_KEY_FILE
+    value: /etc/ssl/certs/etcd-client-tls/tls.key
 
 extraVolumes:
   - name: etcd-client-tls
@@ -24,11 +30,6 @@ extraVolumeMounts:
   - name: etcd-client-tls
     mountPath: /etc/ssl/certs/etcd-client-tls
     readOnly: true
-
-extraArgs:
-  tls-ca: /etc/ssl/certs/etcd-client-tls/ca.crt
-  tls-client-cert: /etc/ssl/certs/etcd-client-tls/tls.crt
-  tls-client-cert-key: /etc/ssl/certs/etcd-client-tls/tls.key
 
 domainFilters:
   - newgamer.lan
