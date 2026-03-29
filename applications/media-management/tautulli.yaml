@@ -16,6 +16,9 @@ spec:
   - repoURL: https://github.com/Haibread/homelab-infra.git
     targetRevision: "main"
     ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/media-management/tautulli
   destination:
     name: in-cluster
     namespace: media-management
