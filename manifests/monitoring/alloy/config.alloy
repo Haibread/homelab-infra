@@ -185,13 +185,13 @@ discovery.kubernetes "pods_metrics" {
 }
 
 mimir.rules.kubernetes "local" {
-  address = "http://grafana-mimir-gateway.monitoring"
+  address = "http://mimir-gateway.monitoring"
   tenant_id = "platform-admin"
 }
 prometheus.remote_write "mimir" {
 // Send metrics to a Mimir instance
   endpoint {
-  url = "http://grafana-mimir-gateway.monitoring/api/v1/push"
+  url = "http://mimir-gateway.monitoring/api/v1/push"
     headers = {
       "X-Scope-OrgID" = "platform-admin",
     }
