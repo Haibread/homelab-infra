@@ -44,6 +44,9 @@ mimir:
         secret_access_key: ${RULER_AWS_SECRET_ACCESS_KEY}
         bucket_name: mimir-ruler
         insecure: true
+    
+    limits:
+      compactor_blocks_retention_period: 4w
 
     # Disables kafka
     ingest_storage:
