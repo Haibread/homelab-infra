@@ -1,5 +1,5 @@
 controller:
-  replicas: 2
+  replicaCount: 2
 
 envoyGateway:
   namespace: envoy-gateway
