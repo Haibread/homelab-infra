@@ -1,0 +1,17 @@
+config:
+  persistence:
+    size: 10Gi
+
+route:
+  main:
+    enabled: true
+    hostnames:
+      - seerr.newgamer.lan
+    httpsRedirect: true
+  
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi
