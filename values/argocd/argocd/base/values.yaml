@@ -1,1 +1,19 @@
 ---
+server:
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: homelab
+        namespace: envoy-gateway
+        sectionName: https
+    hostnames:
+      - argocd.newgamer.lan
+  
+  grpcroute:
+    enabled: true
+    parentRefs:
+      - name: homelab
+        namespace: envoy-gateway
+        sectionName: https
+    hostnames:
+      - argocd.newgamer.lan
