@@ -15,5 +15,10 @@
   },
   "kubernetes": {
     "managerFilePatterns": ["/manifests/.+\\.yaml$/"]
+  },
+  "helm-values": {
+    "managerFilePatterns": [
+      "/^values/.+\\.yaml$/"
+    ]
   }
 }
