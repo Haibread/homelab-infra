@@ -1,0 +1,49 @@
+controllers:
+  radarr:
+    containers:
+      app:
+        image:
+          repository: lscr.io/linuxserver/radarr
+          tag: latest
+        env:
+          PUID: "1000"
+          PGID: "1000"
+          TZ: Europe/Paris
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+
+service:
+  app:
+    controller: radarr
+    ports:
+      http:
+        port: 7878
+
+persistence:
+  config:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 15Gi
+    globalMounts:
+      - path: /config
+  movies:
+    type: nfs
+    server: 192.168.0.150
+    path: /mnt/Storage/Media
+    globalMounts:
+      - path: /movies
+  downloads:
+    type: nfs
+    server: 192.168.0.150
+    path: /mnt/Storage/Media
+    globalMounts:
+      - path: /downloads
