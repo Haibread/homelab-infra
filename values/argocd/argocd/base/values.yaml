@@ -15,3 +15,9 @@ server:
         namespace: envoy-gateway
     hostnames:
       - argocd.newgamer.lan
+    rules:
+      - matches:
+        - headers:
+            - name: Content-Type
+              type: RegularExpression
+              value: "^application/grpc.*$"
