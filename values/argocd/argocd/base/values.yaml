@@ -7,6 +7,15 @@ server:
         namespace: envoy-gateway
     hostnames:
       - argocd.newgamer.lan
+    servicePort: 80
+    rules:
+      - matches:
+        - path:
+            type: PathPrefix
+            value: /
+        backendRefs:
+         - name: argocd-server
+           port: 80
   
   grpcroute:
     enabled: true
