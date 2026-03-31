@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/seerr-team/seerr
-    targetRevision: "3.3.0"
+    targetRevision: "3.3.1"
     chart: seerr-chart
     helm:
       valueFiles:
