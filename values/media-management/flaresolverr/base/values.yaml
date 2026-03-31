@@ -1,0 +1,31 @@
+controllers:
+  flaresolverr:
+    containers:
+      app:
+        image:
+          repository: ghcr.io/thephaseless/byparr
+          tag: latest
+        env:
+          LOG_LEVEL: info
+          LOG_HTML: "false"
+          CAPTCHA_SOLVER: harvester
+          HARVESTER_ENDPOINT: https://172.0.0.1:5000/token
+          no_sandbox: "true"
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+
+service:
+  app:
+    controller: flaresolverr
+    ports:
+      http:
+        port: 8191
