@@ -1,0 +1,37 @@
+controllers:
+  prowlarr:
+    containers:
+      app:
+        image:
+          repository: lscr.io/linuxserver/prowlarr
+          tag: latest
+        env:
+          PUID: "1000"
+          PGID: "1000"
+          TZ: Europe/Paris
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+
+service:
+  app:
+    controller: prowlarr
+    ports:
+      http:
+        port: 9696
+
+persistence:
+  config:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    globalMounts:
+      - path: /config
