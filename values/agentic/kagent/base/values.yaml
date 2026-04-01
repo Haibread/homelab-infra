@@ -3,6 +3,9 @@ providers:
   #anthropic:
     #apiKey: ""  # Set via a Secret or external-secrets
 
+kagent-tools:
+  enabled: false
+
 tools:
   grafana-mcp:
     enabled: false
