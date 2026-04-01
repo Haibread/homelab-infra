@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: overseerr-mcp
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/bjw-s-labs/helm
+    targetRevision: "4.6.2"
+    chart: app-template
+    helm:
+      valueFiles:
+      - $values/values/agentic/overseerr-mcp/base/values.yaml
+      - $values/values/agentic/overseerr-mcp/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/agentic/overseerr-mcp/
+  destination:
+    name: in-cluster
+    namespace: agentic
+  syncPolicy:
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

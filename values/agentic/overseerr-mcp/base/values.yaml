@@ -1,0 +1,32 @@
+controllers:
+  overseerr-mcp:
+    containers:
+      app:
+        image:
+          repository: ghcr.io/jhomen368/overseerr-mcp
+          tag: latest
+        env:
+          HTTP_MODE: "true"
+          PORT: "8085"
+          SEERR_URL: "https://seerr.basget.io/"
+        envFrom:
+          - secretRef:
+              name: overseerr-mcp-secret
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+
+service:
+  app:
+    controller: overseerr-mcp
+    ports:
+      http:
+        port: 8085

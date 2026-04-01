@@ -1,0 +1,12 @@
+apiVersion: kagent.dev/v1alpha2
+kind: RemoteMCPServer
+metadata:
+  name: seerr-mcp
+  namespace: agentic
+spec:
+  description: Seerr MCP Server — manage media requests via Seerr
+  url: https://overseerr-mcp.kagent.svc.cluster.local:8085
+  protocol: STREAMABLE_HTTP
+  timeout: 30s
+  sseReadTimeout: 5m0s
+  terminateOnClose: true
