@@ -25,7 +25,7 @@ spec:
     path: manifests/agentic/kagent/
   destination:
     name: in-cluster
-    namespace: agenti
+    namespace: agentic
   syncPolicy:
     #automated:
     #  selfHeal: true
