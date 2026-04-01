@@ -13,7 +13,6 @@ route:
       kind: Gateway
       name: homelab
       namespace: envoy-gateway
-      sectionName: https
 
 resources:
   requests:
