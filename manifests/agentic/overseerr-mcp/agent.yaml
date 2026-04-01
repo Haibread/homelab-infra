@@ -22,9 +22,9 @@ spec:
       Always confirm with the user before approving or deleting requests.
       When searching, present results clearly with title, year, and availability status.
       If a title is already available, inform the user instead of creating a duplicate request.
-    tools:
-    - name: seerr-mcp
-      type: RemoteMCPServer
-      ref:
-        name: seerr-mcp
-        namespace: agentic
+  tools:
+  - name: seerr-mcp
+    type: RemoteMCPServer
+    ref:
+      name: seerr-mcp
+      namespace: agentic
