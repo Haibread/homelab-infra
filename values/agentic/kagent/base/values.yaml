@@ -2,3 +2,25 @@ providers:
   default: anthropic
   #anthropic:
     #apiKey: ""  # Set via a Secret or external-secrets
+
+agents:
+  k8s-agent:
+    enabled: false
+  kgateway-agent:
+    enabled: false
+  istio-agent:
+    enabled: false
+  promql-agent:
+    enabled: false
+  observability-agent:
+    enabled: false
+  argo-rollouts-agent:
+    enabled: false
+  helm-agent:
+    enabled: false
+  cilium-policy-agent:
+    enabled: false
+  cilium-manager-agent:
+    enabled: false
+  cilium-debug-agent:
+    enabled: false
