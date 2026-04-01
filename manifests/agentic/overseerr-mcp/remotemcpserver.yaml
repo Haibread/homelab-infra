@@ -5,7 +5,7 @@ metadata:
   namespace: agentic
 spec:
   description: Seerr MCP Server — manage media requests via Seerr
-  url: http://overseerr-mcp.agentic.svc.cluster.local:8085
+  url: http://overseerr-mcp.agentic.svc.cluster.local:8085/mcp
   protocol: STREAMABLE_HTTP
   timeout: 30s
   sseReadTimeout: 5m0s
