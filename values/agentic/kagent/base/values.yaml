@@ -2,6 +2,9 @@ registry: "ghcr.io"
 
 providers:
   default: anthropic
+  anthropic:
+    apiKeySecretRef: kagent-anthropic-api-key
+    apiKeySecretKey: apiKey
   #anthropic:
     #apiKey: ""  # Set via a Secret or external-secrets
 
