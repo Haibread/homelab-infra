@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/kagent-dev/kagent/helm
+    targetRevision: 0.8.3
+    chart: kagent-crds
+    helm: {}
+  - repoURL: ghcr.io/kagent-dev/kagent/helm
+    targetRevision: 0.8.3
+    chart: kagent
+    helm:
+      valueFiles:
+      - $values/values/agentic/kagent/base/values.yaml
+      - $values/values/agentic/kagent/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/agentic/kagent/
+  destination:
+    name: in-cluster
+    namespace: agenti
+  syncPolicy:
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

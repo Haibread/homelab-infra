@@ -1,0 +1,4 @@
+providers:
+  default: anthropic
+  #anthropic:
+    #apiKey: ""  # Set via a Secret or external-secrets
