@@ -1,6 +1,10 @@
+config:
+  jwtPrivateKey: "66CwpCJY1cZ7pFazFONDOWV9eJ2SesSJSgiGlLiWiPw=" # Switch to a secret later
+
 database:
   postgres:
-    url: ""  # overridden via extraEnvVars from CNPG secret
+    # Dummy value to satisfy chart validation — overridden at runtime by extraEnvVars below
+    url: "postgres://placeholder"
     bundled:
       enabled: false
 
