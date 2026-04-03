@@ -1,0 +1,12 @@
+database:
+  postgres:
+    url: ""  # overridden via extraEnvVars from CNPG secret
+    bundled:
+      enabled: false
+
+extraEnvVars:
+  - name: AGENT_REGISTRY_DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: agentregistry-pg-app
+        key: uri
