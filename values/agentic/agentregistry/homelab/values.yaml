@@ -1,5 +1,5 @@
 config:
-  jwtPrivateKey: "66CwpCJY1cZ7pFazFONDOWV9eJ2SesSJSgiGlLiWiPw=" # Switch to a secret later
+  jwtPrivateKey: "296c7e9a7b0260f9ca0fcb82da663f1f2ff8e14e7cd04252ee02cff5aadc4abf" # Switch to a secret later
 
 database:
   postgres:
