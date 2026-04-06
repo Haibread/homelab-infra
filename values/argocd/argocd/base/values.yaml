@@ -1,5 +1,8 @@
 ---
 server:
+  certificate:
+    secretName: argocd-server-tls
+  insecure: false
   httproute:
     enabled: true
     parentRefs:
