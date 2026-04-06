@@ -1,5 +1,7 @@
 ---
 server:
+  service:
+    appProtocol: true # gRPS cli HTTP/2
   insecure: true
   httproute:
     enabled: true
