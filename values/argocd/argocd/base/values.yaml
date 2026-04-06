@@ -40,7 +40,9 @@ server:
               type: RegularExpression
               value: "^application/grpc.*$"
 
-argocd-cmd-params-cm:
-  data:
+configs:
+  params:
     server.insecure: "true"
+    server.rootpath: ""
+    server.basehref: "/"
     server.url: "https://argocd.newgamer.lan"
