@@ -1,5 +1,6 @@
 ---
 server:
+  insecure: true
   httproute:
     enabled: true
     parentRefs:
