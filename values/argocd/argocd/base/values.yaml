@@ -17,6 +17,12 @@ server:
         backendRefs:
          - name: argocd-server
            port: 80
+        filters:
+          - type: RequestHeaderModifier
+            requestHeaderModifier:
+              set:
+                - name: X-Forwarded-Proto
+                  value: https
   
   grpcroute:
     enabled: true
