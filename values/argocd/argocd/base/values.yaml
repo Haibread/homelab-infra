@@ -43,3 +43,4 @@ server:
 argocd-cmd-params-cm:
   data:
     server.insecure: "true"
+    server.url: "https://argocd.newgamer.lan"
