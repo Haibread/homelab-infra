@@ -1,8 +1,5 @@
 ---
 server:
-  certificate:
-    secretName: argocd-server-tls
-  insecure: false
   httproute:
     enabled: true
     parentRefs:
@@ -33,3 +30,7 @@ server:
             - name: Content-Type
               type: RegularExpression
               value: "^application/grpc.*$"
+
+argocd-cmd-params-cm:
+  data:
+    server.insecure: "true"
