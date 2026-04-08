@@ -1,0 +1,22 @@
+production: true
+proxy: edge
+
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    memory: 1Gi
+
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: keycloak-pg-rw.keycloak.svc.cluster.local
+  port: 5432
+  database: app
+  user: app
+  existingSecret: keycloak-pg-app
+  existingSecretPasswordKey: password

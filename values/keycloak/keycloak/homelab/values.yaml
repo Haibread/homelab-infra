@@ -1,0 +1,2 @@
+adminIngress:
+  enabled: false
