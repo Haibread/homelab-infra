@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: "25.2.0"
-    chart: keycloak
+  - repoURL: ghcr.io/bjw-s-labs/helm
+    targetRevision: "4.6.2"
+    chart: app-template
     helm:
       valueFiles:
       - $values/values/keycloak/keycloak/base/values.yaml
