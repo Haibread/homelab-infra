@@ -12,6 +12,10 @@ server:
   image:
     tag: "v0.1.0"
 
+  bootstrap:
+    enabled: true
+    sampleData: true
+
   oidcIssuer: "https://keycloak.newgamer.lan/realms/homelab"
   oidcJwksUrl: "http://keycloak.keycloak.svc.cluster.local:443/realms/ai-registry/protocol/openid-connect/certs"
   oidcClientId: "ai-registry"
