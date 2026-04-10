@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-registry
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/haibread/ai-registry/charts
+    targetRevision: "0.1.0"
+    chart: ai-registry
+    helm:
+      valueFiles:
+      - $values/values/agentic/ai-registry/base/values.yaml
+      - $values/values/agentic/ai-registry/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/agentic/ai-registry/
+  destination:
+    name: in-cluster
+    namespace: agentic
+  syncPolicy:
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

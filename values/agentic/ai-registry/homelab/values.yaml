@@ -1,0 +1,9 @@
+web:
+  keycloakId: "ai-registry"
+  # keycloakSecret and authSecret should be provided via a Kubernetes Secret
+  # to avoid storing sensitive values in git.
+  # Create the secret manually:
+  #   kubectl create secret generic ai-registry-web-secrets \
+  #     --namespace agentic \
+  #     --from-literal=AUTH_SECRET=<random> \
+  #     --from-literal=AUTH_KEYCLOAK_SECRET=<client-secret>
