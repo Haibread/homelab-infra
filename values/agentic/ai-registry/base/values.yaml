@@ -9,6 +9,9 @@ httpRoute:
   host: ai-registry.newgamer.lan
 
 server:
+  image:
+    tag: "v0.1.0"
+
   oidcIssuer: "https://keycloak.newgamer.lan/realms/homelab"
   oidcJwksUrl: "http://keycloak.keycloak.svc.cluster.local:443/realms/ai-registry/protocol/openid-connect/certs"
   oidcClientId: "ai-registry"
@@ -24,6 +27,8 @@ server:
       memory: 512Mi
 
 web:
+  image:
+    tag: "v0.1.0"
   keycloakIssuer: "https://keycloak.newgamer.lan/realms/ai-registry"
 
   resources:
