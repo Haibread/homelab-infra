@@ -9,9 +9,6 @@ httpRoute:
   host: ai-registry.newgamer.lan
 
 server:
-  image:
-    tag: "v0.1.0"
-
   bootstrap:
     enabled: true
     sampleData: true
@@ -31,8 +28,6 @@ server:
       memory: 512Mi
 
 web:
-  image:
-    tag: "v0.1.0"
   keycloakIssuer: "https://keycloak.newgamer.lan/realms/ai-registry"
 
   resources:
