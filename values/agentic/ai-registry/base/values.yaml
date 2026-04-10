@@ -55,6 +55,7 @@ server:
       memory: 512Mi
 
 web:
+  apiUrl: "http://ai-registry-server.agentic.svc.cluster.local:8080"
   keycloakIssuer: "https://keycloak.newgamer.lan/realms/ai-registry"
 
   resources:
