@@ -18,7 +18,12 @@ server:
   oidcClientId: "ai-registry"
   corsAllowedOrigins: "https://ai-registry.newgamer.lan"
   trustedProxyCIDR: "10.0.0.0/8"
-  databaseUrlSecret: "ai-registry-pg-app"
+  extraEnv:
+    - name: DATABASE_URL
+      valueFrom:
+        secretKeyRef:
+          name: ai-registry-pg-app
+          key: uri
 
   resources:
     requests:
