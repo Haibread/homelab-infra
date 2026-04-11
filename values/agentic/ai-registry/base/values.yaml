@@ -15,7 +15,7 @@ server:
 
   oidcIssuer: "https://auth.basget.io/realms/ai-registry"
   oidcJwksUrl: "https://auth.basget.io/realms/ai-registry/protocol/openid-connect/certs"
-  oidcClientId: "ai-registry"
+  oidcClientId: "ai-registry-server"
   corsAllowedOrigins: "https://registry.basget.io"
   trustedProxyCIDR: "10.0.0.0/8"
   extraEnv:
