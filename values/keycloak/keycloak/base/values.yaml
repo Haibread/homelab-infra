@@ -15,7 +15,7 @@ controllers:
           KC_DB: postgres
           KC_DB_URL: jdbc:postgresql://keycloak-pg-rw.keycloak.svc.cluster.local:5432/app
           KC_DB_USERNAME: app
-          KC_HOSTNAME: keycloak.newgamer.lan
+          KC_HOSTNAME: auth.basget.io
           KC_PROXY_HEADERS: xforwarded
           KC_HTTP_ENABLED: "true"
           KC_HEALTH_ENABLED: "true"
