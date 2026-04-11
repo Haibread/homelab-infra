@@ -56,7 +56,7 @@ server:
 
 web:
   apiUrl: "http://ai-registry-server.agentic.svc.cluster.local:8080"
-  keycloakIssuer: "https://keycloak.newgamer.lan/realms/ai-registry"
+  keycloakIssuer: "https://auth.basget.io/realms/ai-registry"
 
   resources:
     requests:
