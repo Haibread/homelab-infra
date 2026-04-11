@@ -18,6 +18,7 @@ controllers:
           KC_HOSTNAME: auth.basget.io
           KC_PROXY_HEADERS: xforwarded
           KC_HTTP_ENABLED: "true"
+          KC_HOSTNAME_STRICT_HTTPS: "false"
           KC_HEALTH_ENABLED: "true"
           KC_DB_PASSWORD:
             valueFrom:
