@@ -13,8 +13,8 @@ server:
     enabled: true
     sampleData: true
 
-  oidcIssuer: "https://keycloak.newgamer.lan/realms/homelab"
-  oidcJwksUrl: "http://keycloak.keycloak.svc.cluster.local:443/realms/ai-registry/protocol/openid-connect/certs"
+  oidcIssuer: "https://auth.basget.io/realms/ai-registry"
+  oidcJwksUrl: "https://auth.basget.io/realms/ai-registry/protocol/openid-connect/certs"
   oidcClientId: "ai-registry"
   corsAllowedOrigins: "https://ai-registry.newgamer.lan"
   trustedProxyCIDR: "10.0.0.0/8"
@@ -56,7 +56,6 @@ server:
 
 web:
   apiUrl: "http://ai-registry-server.agentic.svc.cluster.local:8080"
-  keycloakIssuer: "https://auth.basget.io/realms/ai-registry"
 
   resources:
     requests:
