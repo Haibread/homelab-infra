@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/grafana-community/helm-charts
-    targetRevision: "11.3.7"
+    targetRevision: "11.6.1"
     chart: grafana
     helm:
       valueFiles:
