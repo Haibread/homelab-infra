@@ -18,34 +18,34 @@ server:
   oidcClientId: "ai-registry-web"
   corsAllowedOrigins: "https://registry.basget.io"
   trustedProxyCIDR: "10.0.0.0/8"
-  extraEnv:
-    - name: _PG_USER
-      valueFrom:
-        secretKeyRef:
-          name: ai-registry-pg-app
-          key: username
-    - name: _PG_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: ai-registry-pg-app
-          key: password
-    - name: _PG_HOST
-      valueFrom:
-        secretKeyRef:
-          name: ai-registry-pg-app
-          key: host
-    - name: _PG_PORT
-      valueFrom:
-        secretKeyRef:
-          name: ai-registry-pg-app
-          key: port
-    - name: _PG_DBNAME
-      valueFrom:
-        secretKeyRef:
-          name: ai-registry-pg-app
-          key: dbname
-    - name: DATABASE_URL
-      value: "postgres://$(_PG_USER):$(_PG_PASSWORD)@$(_PG_HOST):$(_PG_PORT)/$(_PG_DBNAME)"
+#  extraEnv:
+#    - name: _PG_USER
+#      valueFrom:
+#        secretKeyRef:
+#          name: ai-registry-pg-app
+#          key: username
+#    - name: _PG_PASSWORD
+#      valueFrom:
+#        secretKeyRef:
+#          name: ai-registry-pg-app
+#          key: password
+#    - name: _PG_HOST
+#      valueFrom:
+#        secretKeyRef:
+#          name: ai-registry-pg-app
+#          key: host
+#    - name: _PG_PORT
+#      valueFrom:
+#        secretKeyRef:
+#          name: ai-registry-pg-app
+#          key: port
+#    - name: _PG_DBNAME
+#      valueFrom:
+#        secretKeyRef:
+#          name: ai-registry-pg-app
+#          key: dbname
+#    - name: DATABASE_URL
+#      value: "postgres://$(_PG_USER):$(_PG_PASSWORD)@$(_PG_HOST):$(_PG_PORT)/$(_PG_DBNAME)"
 
   resources:
     requests:
