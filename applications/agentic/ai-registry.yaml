@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/haibread/ai-registry/charts
-    targetRevision: "0.3.1"
+    targetRevision: "0.0.0-main.731d5dd"
     chart: ai-registry
     helm:
       valueFiles:
