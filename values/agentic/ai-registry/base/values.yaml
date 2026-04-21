@@ -65,4 +65,4 @@ web:
       memory: 256Mi
 
 cnpg:
-  enabled: false
+  enabled: true
