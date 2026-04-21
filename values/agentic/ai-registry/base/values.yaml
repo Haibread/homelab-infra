@@ -1,6 +1,3 @@
-ingress:
-  enabled: false
-
 httpRoute:
   enabled: true
   gatewayRef:
