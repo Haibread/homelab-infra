@@ -13,6 +13,13 @@ spec:
   hostnames:
     - requestrr.newgamer.lan
   rules:
-    - backendRefs:
-        - name: requestrr
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: requestrr
           port: 4545
+          weight: 1

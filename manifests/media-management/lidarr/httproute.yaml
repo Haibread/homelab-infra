@@ -13,6 +13,13 @@ spec:
   hostnames:
     - lidarr.newgamer.lan
   rules:
-    - backendRefs:
-        - name: lidarr
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: lidarr
           port: 8686
+          weight: 1

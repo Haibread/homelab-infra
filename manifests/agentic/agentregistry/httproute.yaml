@@ -12,6 +12,13 @@ spec:
   hostnames:
   - agentregistry.newgamer.lan
   rules:
-  - backendRefs:
-    - name: agentregistry
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - group: ""
+      kind: Service
+      name: agentregistry
       port: 12121
+      weight: 1

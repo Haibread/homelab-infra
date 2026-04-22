@@ -13,6 +13,13 @@ spec:
   hostnames:
     - sonarr.newgamer.lan
   rules:
-    - backendRefs:
-        - name: sonarr
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: sonarr
           port: 8989
+          weight: 1

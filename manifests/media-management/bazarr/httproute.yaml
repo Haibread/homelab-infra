@@ -13,6 +13,13 @@ spec:
   hostnames:
     - bazarr.newgamer.lan
   rules:
-    - backendRefs:
-        - name: bazarr
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: bazarr
           port: 6767
+          weight: 1

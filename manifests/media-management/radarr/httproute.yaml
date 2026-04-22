@@ -13,6 +13,13 @@ spec:
   hostnames:
     - radarr.newgamer.lan
   rules:
-    - backendRefs:
-        - name: radarr
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: radarr
           port: 7878
+          weight: 1

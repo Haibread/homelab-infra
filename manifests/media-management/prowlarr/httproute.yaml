@@ -13,6 +13,13 @@ spec:
   hostnames:
     - prowlarr.newgamer.lan
   rules:
-    - backendRefs:
-        - name: prowlarr
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: prowlarr
           port: 9696
+          weight: 1

@@ -12,6 +12,13 @@ spec:
   hostnames:
   - keycloak.newgamer.lan
   rules:
-  - backendRefs:
-    - name: keycloak
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - group: ""
+      kind: Service
+      name: keycloak
       port: 8080
+      weight: 1
