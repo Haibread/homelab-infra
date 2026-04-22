@@ -23,16 +23,23 @@ spec:
     name: in-cluster
     namespace: kube-system
   ignoreDifferences:
-  - kind: Secret
+  - group: ""
+    kind: Secret
     name: cilium-ca
     namespace: kube-system
-    jsonPointers:
-    - /data
-  - kind: Secret
+    jqPathExpressions:
+    - '.data'
+    - '.data["ca.crt"]'
+    - '.data["ca.key"]'
+  - group: ""
+    kind: Secret
     name: hubble-server-certs
     namespace: kube-system
-    jsonPointers:
-    - /data
+    jqPathExpressions:
+    - '.data'
+    - '.data["ca.crt"]'
+    - '.data["tls.crt"]'
+    - '.data["tls.key"]'
   syncPolicy:
     #automated:
     #  selfHeal: true

@@ -23,11 +23,15 @@ spec:
     name: in-cluster
     namespace: envoy-gateway
   ignoreDifferences:
-  - kind: Secret
+  - group: ""
+    kind: Secret
     name: self-signed-cert-for-mutating-webhook
     namespace: envoy-gateway
-    jsonPointers:
-    - /data
+    jqPathExpressions:
+    - '.data'
+    - '.data["ca.crt"]'
+    - '.data["tls.crt"]'
+    - '.data["tls.key"]'
   syncPolicy:
     #automated:
     #  selfHeal: true
