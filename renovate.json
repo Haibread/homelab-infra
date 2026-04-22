@@ -20,5 +20,8 @@
     "managerFilePatterns": [
       "/^values/.+\\.yaml$/"
     ]
+  },
+  "pre-commit": {
+    "enabled": true
   }
 }

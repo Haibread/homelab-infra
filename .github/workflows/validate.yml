@@ -20,16 +20,17 @@ env:
   KUBECONFORM_SKIP: "CephCluster,CephBlockPool,CephFilesystem,CephObjectStore,CephCluster/v1"
 
 jobs:
-  yamllint:
-    name: yamllint
+  pre-commit:
+    name: pre-commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-      - run: pip install --upgrade yamllint
-      - run: yamllint -c .yamllint.yaml .
+      - uses: pre-commit/action@v3.0.1
 
   kubeconform-raw:
     name: kubeconform (raw manifests)
