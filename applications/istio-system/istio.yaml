@@ -19,6 +19,11 @@ spec:
   destination:
     name: in-cluster
     namespace: istio-system
+  ignoreDifferences:
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    jqPathExpressions:
+    - '.webhooks[]?.failurePolicy'
   syncPolicy:
     #automated:
     #  selfHeal: true
