@@ -29,7 +29,7 @@ ruler_bucket_env: &ruler_bucket_env
           key: AWS_SECRET_ACCESS_KEY
 
 loki:
-  auth_enabled: true 
+  auth_enabled: true
 
   limits_config:
     reject_old_samples: true
@@ -70,7 +70,7 @@ loki:
         index:
           prefix: index_
           period: 24h
-    
+
   ui:
     enabled: true
 

@@ -9,7 +9,7 @@ spec:
   - repoURL: https://charts.jetstack.io
     targetRevision: "v1.20.2"
     chart: cert-manager
-    helm: 
+    helm:
       valueFiles:
       - $values/values/cert-manager/cert-manager/base/values.yaml
       - $values/values/cert-manager/cert-manager/homelab/values.yaml
