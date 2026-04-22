@@ -1,0 +1,21 @@
+---
+extends: default
+
+rules:
+  line-length: disable
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  truthy:
+    check-keys: false
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  document-start: disable
+  braces:
+    max-spaces-inside: 1
+  brackets:
+    max-spaces-inside: 1
+
+ignore: |
+  .github/
