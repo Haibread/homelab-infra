@@ -13,6 +13,13 @@ spec:
   hostnames:
     - tautulli.newgamer.lan
   rules:
-    - backendRefs:
-        - name: tautulli
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: tautulli
           port: 8181
+          weight: 1
