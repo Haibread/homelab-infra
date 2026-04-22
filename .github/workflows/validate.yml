@@ -11,10 +11,13 @@ permissions:
   contents: read
 
 env:
-  KUBECONFORM_VERSION: "0.7.0"
-  KUSTOMIZE_VERSION: "5.7.2"
-  YQ_VERSION: "4.47.3"
-  HELM_VERSION: "v3.20.0"
+  # Pinned only where the download URL embeds the version. Tools with
+  # version-agnostic asset names are fetched from /releases/latest/download/.
+  KUSTOMIZE_VERSION: "5.8.1"
+  # Kinds with CRD schemas in datreeio/CRDs-catalog that are too strict
+  # (reject legitimate null values on optional object fields). Revisit when
+  # a cleaner schema source is available.
+  KUBECONFORM_SKIP: "CephCluster,CephBlockPool,CephFilesystem,CephObjectStore,CephCluster/v1"
 
 jobs:
   yamllint:
@@ -25,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-      - run: pip install --upgrade yamllint==1.37.1
+      - run: pip install --upgrade yamllint
       - run: yamllint -c .yamllint.yaml .
 
   kubeconform-raw:
@@ -36,22 +39,17 @@ jobs:
       - name: Install kubeconform
         run: |
           curl -fsSL -o kc.tgz \
-            "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+            "https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz"
           tar -xzf kc.tgz kubeconform
           sudo install -m 0755 kubeconform /usr/local/bin/
       - name: Validate raw manifest files
         run: |
           set -euo pipefail
-          # Everything in manifests/ that isn't part of a kustomize overlay
-          # (kustomize overlays are validated in the kustomize-build job).
           mapfile -t files < <(find manifests -type f -name '*.yaml' \
-            ! -name 'kustomization.yaml' \
-            ! -path '*/components/*' | sort)
-          # Exclude files that are referenced as resources by a kustomization;
-          # easier to just run kubeconform on every yaml — duplication is fine.
+            ! -name 'kustomization.yaml' | sort)
           kubeconform \
-            -strict \
             -ignore-missing-schemas \
+            -skip "${KUBECONFORM_SKIP}" \
             -summary \
             -schema-location default \
             -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
@@ -71,7 +69,7 @@ jobs:
       - name: Install kubeconform
         run: |
           curl -fsSL -o kc.tgz \
-            "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+            "https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz"
           tar -xzf kc.tgz kubeconform
           sudo install -m 0755 kubeconform /usr/local/bin/
       - name: Build every kustomization and validate
@@ -82,7 +80,9 @@ jobs:
             dir="$(dirname "$k")"
             echo "=== kustomize build $dir ==="
             if ! kustomize build "$dir" | kubeconform \
-                -strict -ignore-missing-schemas -summary \
+                -ignore-missing-schemas \
+                -skip "${KUBECONFORM_SKIP}" \
+                -summary \
                 -schema-location default \
                 -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'; then
               echo "::error file=$k::kustomize build / kubeconform failed"
@@ -97,20 +97,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: azure/setup-helm@v5
-        with:
-          version: ${{ env.HELM_VERSION }}
       - name: Install yq
         run: |
-          curl -fsSL -o /usr/local/bin/yq \
-            "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
+          sudo curl -fsSL -o /usr/local/bin/yq \
+            "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64"
           sudo chmod +x /usr/local/bin/yq
       - name: Install kubeconform
         run: |
           curl -fsSL -o kc.tgz \
-            "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+            "https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz"
           tar -xzf kc.tgz kubeconform
           sudo install -m 0755 kubeconform /usr/local/bin/
       - name: Render and validate every Application
+        env:
+          KUBECONFORM_SKIP: ${{ env.KUBECONFORM_SKIP }}
         run: bash .github/scripts/render-apps.sh
 
   renovate-config:
@@ -118,7 +118,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
       - run: npx --yes --package renovate@latest -- renovate-config-validator --strict

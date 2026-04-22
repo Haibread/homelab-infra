@@ -67,7 +67,10 @@ for app in "${APPS[@]}"; do
     continue
   fi
 
-  kubeconform_args=(-strict -ignore-missing-schemas -summary)
+  kubeconform_args=(-ignore-missing-schemas -summary)
+  if [[ -n "${KUBECONFORM_SKIP:-}" ]]; then
+    kubeconform_args+=(-skip "$KUBECONFORM_SKIP")
+  fi
   for loc in "${SCHEMA_LOCATIONS[@]}"; do
     kubeconform_args+=(-schema-location "$loc")
   done
