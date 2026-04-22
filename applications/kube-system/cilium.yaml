@@ -22,6 +22,17 @@ spec:
   destination:
     name: in-cluster
     namespace: kube-system
+  ignoreDifferences:
+  - kind: Secret
+    name: cilium-ca
+    namespace: kube-system
+    jsonPointers:
+    - /data
+  - kind: Secret
+    name: hubble-server-certs
+    namespace: kube-system
+    jsonPointers:
+    - /data
   syncPolicy:
     #automated:
     #  selfHeal: true

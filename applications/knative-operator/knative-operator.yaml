@@ -22,6 +22,11 @@ spec:
   destination:
     name: in-cluster
     namespace: knative-operator
+  ignoreDifferences:
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    jqPathExpressions:
+    - '.rules'
   syncPolicy:
     #automated:
     #  selfHeal: true

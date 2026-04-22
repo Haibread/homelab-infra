@@ -22,6 +22,18 @@ spec:
   destination:
     name: in-cluster
     namespace: monitoring
+  ignoreDifferences:
+  - kind: Secret
+    name: grafana
+    namespace: monitoring
+    jsonPointers:
+    - /data/admin-password
+  - group: apps
+    kind: Deployment
+    name: grafana
+    namespace: monitoring
+    jsonPointers:
+    - /spec/template/metadata/annotations/checksum~1secret
   syncPolicy:
     managedNamespaceMetadata:
       labels:

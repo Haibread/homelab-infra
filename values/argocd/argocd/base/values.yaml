@@ -25,7 +25,7 @@ server:
               set:
                 - name: X-Forwarded-Proto
                   value: https
-  
+
   grpcroute:
     enabled: true
     parentRefs:
