@@ -53,18 +53,32 @@ All applications use server-side apply and manual sync (no auto-sync):
 
 ### Networking
 - **Envoy Gateway** handles all ingress via `Gateway` + `HTTPRoute` resources
+- **Envoy AI Gateway** provides an LLM-aware gateway in front of model-serving workloads
+- **Istio** is installed in `istio-system/` (service mesh — used by Knative/KServe)
 - **Cilium** is the CNI with BGP Control Plane enabled
 - **Multus** provides additional network interfaces for VMs
+- **CoreDNS** + **external-dns** manage internal DNS records
 - Domain: `newgamer.lan`
 
 ### Storage
 - **Rook Ceph** for distributed storage (StorageClasses, CephBlockPools, etc.)
-- **CloudNative PG** operator for PostgreSQL
+- **CloudNative PG** (`cnpg-system/`) operator for PostgreSQL
+
+### TLS & Identity
+- **cert-manager** issues certificates
+- **Keycloak** provides SSO / OIDC for downstream apps
 
 ### Observability Stack
-Prometheus → Grafana, Loki (logs), Mimir (long-term metrics), Alloy (agent)
+Grafana, Loki (logs), Mimir (long-term metrics), Alloy (agent). Prometheus itself is not deployed as a standalone app — only `prometheus-crds` lives under `applications/monitoring/`; metric scraping is handled by Alloy shipping to Mimir.
 
-### Media Stack
+### Virtualization
+- **KubeVirt** runs VMs on the cluster (Multus provides their extra NICs)
+
+### AI / Agentic Stack (`agentic/` namespace)
+- **KServe** + **Knative** (`knative-operator/`) serve ML models
+- **kagent**, **ai-registry**, **agentregistry**, **overseerr-mcp** — agent runtime, model/agent registries, and an MCP server integration
+
+### Media Stack (`media-management/` namespace)
 Radarr, Sonarr, Lidarr, Bazarr, Prowlarr, Flaresolverr, Tautulli, Seerr, Requestrr — all using the `bjw-s/app-template` Helm chart.
 
 ## Adding a New Application
