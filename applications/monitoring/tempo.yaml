@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tempo
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/grafana-community/helm-charts
+    targetRevision: "2.16.6"
+    chart: tempo-distributed
+    helm:
+      valueFiles:
+      - $values/values/monitoring/tempo/base/values.yaml
+      - $values/values/monitoring/tempo/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/monitoring/tempo
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

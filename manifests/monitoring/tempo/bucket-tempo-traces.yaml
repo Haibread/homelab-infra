@@ -1,0 +1,7 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: tempo-traces
+spec:
+  bucketName: tempo-traces
+  storageClassName: rook-ceph-bucket-main

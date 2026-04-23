@@ -1,0 +1,77 @@
+traces_bucket_env: &traces_bucket_env
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: tempo-traces
+        key: AWS_ACCESS_KEY_ID
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tempo-traces
+        key: AWS_SECRET_ACCESS_KEY
+
+global_extraArgs: &global_extraArgs
+  - "-config.expand-env=true"
+
+multitenancyEnabled: true
+
+traces:
+  otlp:
+    http:
+      enabled: true
+    grpc:
+      enabled: true
+
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: tempo-traces
+      endpoint: rook-ceph-rgw-main.rook-ceph.svc.cluster.local:80
+      region: us-east-1
+      access_key: "${AWS_ACCESS_KEY_ID}"
+      secret_key: "${AWS_SECRET_ACCESS_KEY}"
+      insecure: true
+      forcepathstyle: true
+
+ingester:
+  replicas: 3
+  extraArgs: *global_extraArgs
+  extraEnv: *traces_bucket_env
+  persistence:
+    enabled: true
+    size: 20Gi
+
+distributor:
+  replicas: 2
+  extraArgs: *global_extraArgs
+  extraEnv: *traces_bucket_env
+
+compactor:
+  replicas: 1
+  extraArgs: *global_extraArgs
+  extraEnv: *traces_bucket_env
+
+querier:
+  replicas: 2
+  extraArgs: *global_extraArgs
+  extraEnv: *traces_bucket_env
+
+queryFrontend:
+  replicas: 2
+  extraArgs: *global_extraArgs
+  extraEnv: *traces_bucket_env
+
+metricsGenerator:
+  enabled: false
+
+memcached:
+  enabled: true
+  replicas: 1
+
+minio:
+  enabled: false
+
+gateway:
+  enabled: true
+  replicas: 2
