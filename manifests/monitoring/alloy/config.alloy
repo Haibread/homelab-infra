@@ -331,6 +331,11 @@ loki.write "default" {
 }
 
 // Traces
+tracing {
+  sampling_fraction = 0.05
+  write_to = [otelcol.processor.batch.default.input]
+}
+
 // Receive OTLP traces from cluster workloads on 4317 (gRPC) and 4318 (HTTP),
 // batch them, and forward to the Tempo distributor with a tenant header
 // (tempo-distributed has multitenancyEnabled: true).
