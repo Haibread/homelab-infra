@@ -28,6 +28,33 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: mimir-grafana-datasource
+  namespace: monitoring
+  labels:
+    grafana_datasource: 'true'
+data:
+  mimir.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Mimir
+      type: prometheus
+      uid: mimir
+      url: "http://mimir-gateway.monitoring/prometheus"
+      access: proxy
+      jsonData:
+        httpHeaderName1: X-Scope-OrgID
+        # Enable exemplar traces -> Tempo jumping from a Prometheus metric
+        # to the trace that produced the exemplar.
+        exemplarTraceIdDestinations:
+          - name: trace_id
+            datasourceUid: tempo
+      secureJsonData:
+        httpHeaderValue1: platform-admin
+      editable: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: tempo-grafana-datasource
   namespace: monitoring
   labels:
