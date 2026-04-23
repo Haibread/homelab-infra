@@ -11,10 +11,67 @@ data:
     datasources:
     - name: Loki
       type: loki
+      uid: loki
       url: "http://loki-gateway.monitoring/"
       access: proxy
       jsonData:
         httpHeaderName1: X-Scope-OrgID
+        derivedFields:
+          - datasourceUid: tempo
+            matcherRegex: "trace_id=(\\w+)"
+            name: TraceID
+            url: "$${__value.raw}"
+      secureJsonData:
+        httpHeaderValue1: platform-admin
+      editable: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-grafana-datasource
+  namespace: monitoring
+  labels:
+    grafana_datasource: 'true'
+data:
+  datasource.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      url: "http://tempo-query-frontend.monitoring.svc.cluster.local:3200"
+      access: proxy
+      jsonData:
+        httpHeaderName1: X-Scope-OrgID
+        # Correlate spans -> Loki logs via the trace_id label/field on log lines.
+        tracesToLogsV2:
+          datasourceUid: loki
+          spanStartTimeShift: "-5m"
+          spanEndTimeShift: "5m"
+          filterByTraceID: true
+          filterBySpanID: false
+          tags:
+            - key: service.name
+              value: service_name
+            - key: k8s.namespace.name
+              value: namespace
+            - key: k8s.pod.name
+              value: pod
+        # Service graph + span metrics backed by Mimir (requires
+        # tempo metrics-generator to be enabled later).
+        serviceMap:
+          datasourceUid: mimir
+        nodeGraph:
+          enabled: true
+        search:
+          hide: false
+        traceQuery:
+          timeShiftEnabled: true
+          spanStartTimeShift: "-5m"
+          spanEndTimeShift: "5m"
+        spanBar:
+          type: "Tag"
+          tag: "http.path"
       secureJsonData:
         httpHeaderValue1: platform-admin
       editable: false

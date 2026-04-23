@@ -329,3 +329,42 @@ loki.write "default" {
   tenant_id = nonsensitive("platform-admin")
   }
 }
+
+// Traces
+// Receive OTLP traces from cluster workloads on 4317 (gRPC) and 4318 (HTTP),
+// batch them, and forward to the Tempo distributor with a tenant header
+// (tempo-distributed has multitenancyEnabled: true).
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    traces = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  // Tempo recommends batching before export.
+  send_batch_size = 1000
+  timeout         = "5s"
+
+  output {
+    traces = [otelcol.exporter.otlp.tempo.input]
+  }
+}
+
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = "tempo-distributor.monitoring.svc.cluster.local:4317"
+    tls {
+      insecure = true
+    }
+    headers = {
+      "X-Scope-OrgID" = "platform-admin",
+    }
+  }
+}

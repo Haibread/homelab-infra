@@ -8,6 +8,16 @@ alloy:
     requests:
       cpu: 100m
       memory: 256Mi
+  # Expose OTLP ports for the tracing pipeline defined in config.alloy.
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
 
 serviceMonitor:
   enabled: true
