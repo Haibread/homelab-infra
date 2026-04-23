@@ -6,7 +6,7 @@ metadata:
   labels:
     grafana_datasource: 'true'
 data:
-  datasource.yaml: |-
+  loki.yaml: |-
     apiVersion: 1
     datasources:
     - name: Loki
@@ -33,7 +33,7 @@ metadata:
   labels:
     grafana_datasource: 'true'
 data:
-  datasource.yaml: |-
+  tempo.yaml: |-
     apiVersion: 1
     datasources:
     - name: Tempo
