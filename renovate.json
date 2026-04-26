@@ -29,6 +29,27 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["lscr.io/linuxserver/**"],
       "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(\\.(?<build>\\d+))?(-ls(?<revision>\\d+))?$"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/thephaseless/byparr"],
+      "extractVersion": "^v?(?<version>.+)$"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["nicolaka/netshoot"],
+      "replacementVersion": "v0.15"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/envoyproxy/ratelimit"],
+      "replacementVersion": "v1.4.0"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["gcr.io/google_containers/pause"],
+      "replacementName": "registry.k8s.io/pause",
+      "replacementVersion": "3.10.2"
     }
   ]
 }
