@@ -3,6 +3,18 @@
   "extends": [
     "config:recommended"
   ],
+  "minimumReleaseAge": "1 day",
+  "schedule": [
+    "after 10pm every weekday",
+    "before 5am every weekday",
+    "every weekend"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "minimumReleaseAge": null,
+    "schedule": ["at any time"]
+  },
   "prHourlyLimit": 0,
   "argocd": {
     "managerFilePatterns": [
@@ -24,6 +36,30 @@
   "pre-commit": {
     "enabled": true
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^applications/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "repoURL:\\s*(?<depName>https://github\\.com/[\\w./-]+?)(?:\\.git)?\\s+targetRevision:\\s*\"?(?<currentValue>v?\\d+\\.\\d+\\.\\d+[\\w.-]*)\"?"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^manifests/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+)/releases/download/(?<currentValue>[^/\\s]+)/"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    }
+  ],
   "packageRules": [
     {
       "matchDatasources": ["docker"],
@@ -31,7 +67,17 @@
       "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(\\.(?<build>\\d+))?(-ls(?<revision>\\d+))?$"
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "*arr media stack",
+      "matchPackageNames": [
+        "lscr.io/linuxserver/radarr",
+        "lscr.io/linuxserver/sonarr",
+        "lscr.io/linuxserver/lidarr",
+        "lscr.io/linuxserver/bazarr",
+        "lscr.io/linuxserver/prowlarr"
+      ]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
       "automerge": true,
       "platformAutomerge": true
     }
