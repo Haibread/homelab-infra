@@ -4,7 +4,7 @@ controllers:
       app:
         image:
           repository: ghcr.io/thephaseless/byparr
-          tag: 2.1.0
+          tag: v2.1.2
         env:
           LOG_LEVEL: info
           LOG_HTML: "false"
