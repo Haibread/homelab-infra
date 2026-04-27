@@ -47,6 +47,17 @@
       ],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^manifests/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+)/releases/download/(?<currentValue>[^/\\s]+)/"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
     }
   ],
   "packageRules": [
