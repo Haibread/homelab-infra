@@ -18,7 +18,7 @@ spec:
         - operator: Exists
       initContainers:
         - name: bridge-vlan-setup
-          image: nicolaka/netshoot:latest
+          image: nicolaka/netshoot:v0.15
           command:
             - /bin/sh
             - -c
@@ -44,7 +44,7 @@ spec:
               mountPath: /host
       containers:
         - name: pause
-          image: gcr.io/google_containers/pause:3.2
+          image: registry.k8s.io/pause:3.10.2
       volumes:
         - name: host
           hostPath:

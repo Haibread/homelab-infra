@@ -19,7 +19,7 @@ config:
                     containers:
                       - imagePullPolicy: IfNotPresent
                         name: envoy-ratelimit
-                        image: docker.io/envoyproxy/ratelimit:60d8e81b
+                        image: docker.io/envoyproxy/ratelimit:v1.4.0
     rateLimit:
       backend:
         type: Redis
