@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/kagent-dev/kagent/helm
-    targetRevision: 0.9.0
+    targetRevision: 0.9.1
     chart: kagent-crds
     helm: {}
   - repoURL: ghcr.io/kagent-dev/kagent/helm
