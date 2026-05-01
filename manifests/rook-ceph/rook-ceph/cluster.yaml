@@ -280,7 +280,8 @@ spec:
       - name: blade-243
         devices:
           - name: "/dev/disk/by-id/wwn-0x50011731004267bc"
-          - name: "/dev/disk/by-id/wwn-0x5001173100427674"
+          # wwn-0x5001173100427674 removed: drive wedged the kernel block layer
+          # (bdev_open / blkid hang in D-state, survives reboot). Replace HW.
           - name: "/dev/disk/by-id/wwn-0x50011731004276b0"
           - name: "/dev/nvme0n1"
             config:
