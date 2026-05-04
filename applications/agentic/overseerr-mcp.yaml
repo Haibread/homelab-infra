@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/bjw-s-labs/helm
-    targetRevision: "4.6.2"
+    targetRevision: "5.0.0"
     chart: app-template
     helm:
       valueFiles:
