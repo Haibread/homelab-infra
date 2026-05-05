@@ -14,7 +14,7 @@ spec:
       - $values/values/envoy-gateway/envoy-ai-gateway/base/values.yaml
       - $values/values/envoy-gateway/envoy-ai-gateway/homelab/values.yaml
   - repoURL: docker.io/envoyproxy
-    targetRevision: "0.5.0"
+    targetRevision: "0.6.0"
     chart: ai-gateway-crds-helm
     helm: {}
   - repoURL: https://github.com/Haibread/homelab-infra.git
