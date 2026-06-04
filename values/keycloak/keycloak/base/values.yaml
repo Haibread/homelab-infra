@@ -8,7 +8,7 @@ controllers:
       app:
         image:
           repository: quay.io/keycloak/keycloak
-          tag: "26.6.2"
+          tag: "26.6.3"
         args:
           - start
         env:
