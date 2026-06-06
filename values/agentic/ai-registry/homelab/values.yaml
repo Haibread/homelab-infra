@@ -1,9 +1,14 @@
-web:
-  keycloakId: "ai-registry"
-  # keycloakSecret and authSecret should be provided via a Kubernetes Secret
-  # to avoid storing sensitive values in git.
-  # Create the secret manually:
-  #   kubectl create secret generic ai-registry-web-secrets \
-  #     --namespace agentic \
-  #     --from-literal=AUTH_SECRET=<random> \
-  #     --from-literal=AUTH_KEYCLOAK_SECRET=<client-secret>
+# Environment-specific overrides for the homelab deployment.
+#
+# Two Secrets must be provisioned out-of-band (never committed to git). Both are
+# referenced by base/values.yaml via *ExistingSecret:
+#
+# 1. Confidential OIDC broker client secret (Keycloak client "ai-registry"):
+#      kubectl create secret generic ai-registry-oidc \
+#        --namespace agentic \
+#        --from-literal=OIDC_CLIENT_SECRET=<keycloak-client-secret>
+#
+# 2. Ed25519 JWT signing seed (>= 32 chars; stable across restarts/replicas):
+#      kubectl create secret generic ai-registry-jwt \
+#        --namespace agentic \
+#        --from-literal=JWT_SIGNING_SEED=$(openssl rand -hex 32)

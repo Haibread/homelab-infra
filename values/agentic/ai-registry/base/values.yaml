@@ -1,3 +1,7 @@
+# ai-registry chart values — schema for 0.4.0-rc4.
+# Top-level blocks: global / api / webapp / ingress / httpRoute / cnpg.
+# (0.3.x used flat server: / web: blocks — renamed to api: / webapp: in 0.4.0.)
+
 httpRoute:
   enabled: true
   gatewayRef:
@@ -5,19 +9,40 @@ httpRoute:
     namespace: envoy-gateway
   host: ai-registry.newgamer.lan
 
-server:
+api:
+  # ── Auth (OIDC) ──────────────────────────────────────────────────────────
+  # 0.4.0 brokers OIDC server-side: the server is the single CONFIDENTIAL
+  # client (Authorization Code + PKCE) and mints its own Ed25519 bearer tokens.
+  # The SPA is no longer an OIDC client (the old web.keycloakId / AUTH_* knobs
+  # are gone).
+  oidcEnabled: true
+  oidcIssuer: "https://auth.basget.io/realms/ai-registry"
+  oidcJwksUrl: "https://auth.basget.io/realms/ai-registry/protocol/openid-connect/certs"
+  oidcClientId: "ai-registry"
+  # Confidential broker client secret. Secret must hold key OIDC_CLIENT_SECRET.
+  oidcClientSecretExistingSecret: ai-registry-oidc
+
+  # ── Auth (registry token signing) ────────────────────────────────────────
+  # Ed25519 signing seed for registry-issued access/refresh tokens. Must be
+  # stable across restarts and replicas — an unset key is ephemeral (dev only)
+  # and logs everyone out on every pod restart. Secret holds key JWT_SIGNING_SEED.
+  jwtSigningSeedExistingSecret: ai-registry-jwt
+
+  # ── HTTP ─────────────────────────────────────────────────────────────────
+  corsAllowedOrigins: "https://registry.basget.io"
+  trustedProxyCIDR: "10.0.0.0/8"
+  # Public-facing base URL clients use (required); drives OAuth protected-
+  # resource metadata and the A2A global agent card.
+  publicBaseURL: "https://registry.basget.io"
+
+  # ── Bootstrap ────────────────────────────────────────────────────────────
   bootstrap:
     enabled: true
     sampleData: true
 
-  oidcIssuer: "https://auth.basget.io/realms/ai-registry"
-  oidcJwksUrl: "https://auth.basget.io/realms/ai-registry/protocol/openid-connect/certs"
-  oidcClientId: "ai-registry-web"
-  corsAllowedOrigins: "https://registry.basget.io"
-  trustedProxyCIDR: "10.0.0.0/8"
-
-web:
-  apiUrl: "http://ai-registry-server.agentic.svc.cluster.local:8080"
+# webapp.apiUrl intentionally unset — the chart derives the in-cluster api
+# service URL from the release name. The service is now <release>-api (the
+# component was renamed server→api in 0.4.0), so a hardcoded URL would break.
 
 cnpg:
   enabled: true
