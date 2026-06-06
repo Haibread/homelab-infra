@@ -179,11 +179,6 @@ prometheus.relabel "kubelet" {
   }
   forward_to = [prometheus.remote_write.mimir.receiver]
 }
-// Harmattan config
-discovery.kubernetes "pods_metrics" {
-  role = "pod"
-}
-
 mimir.rules.kubernetes "local" {
   address = "http://mimir-gateway.monitoring"
   tenant_id = "platform-admin"
@@ -322,6 +317,13 @@ loki.source.kubernetes_events "default" {
   job_name = "kubernetes_events"
   forward_to = [loki.write.default.receiver]
   log_format = "logfmt"
+  // Without clustering, every node's Alloy pod collects the whole cluster's
+  // events, sending one duplicate copy per node. Clustering (added for this
+  // component in Alloy v1.16) shards namespaces across nodes via consistent
+  // hashing so each event is collected once.
+  clustering {
+    enabled = true
+  }
 }
 loki.write "default" {
   endpoint {
@@ -333,12 +335,13 @@ loki.write "default" {
 // Traces
 tracing {
   sampling_fraction = 0.05
-  write_to = [otelcol.processor.batch.default.input]
+  write_to = [otelcol.exporter.otlp.tempo.input]
 }
 
 // Receive OTLP traces from cluster workloads on 4317 (gRPC) and 4318 (HTTP),
-// batch them, and forward to the Tempo distributor with a tenant header
-// (tempo-distributed has multitenancyEnabled: true).
+// and forward to the Tempo distributor with a tenant header
+// (tempo-distributed has multitenancyEnabled: true). Batching is handled at
+// the exporter (see below).
 otelcol.receiver.otlp "default" {
   grpc {
     endpoint = "0.0.0.0:4317"
@@ -348,21 +351,19 @@ otelcol.receiver.otlp "default" {
   }
 
   output {
-    traces = [otelcol.processor.batch.default.input]
-  }
-}
-
-otelcol.processor.batch "default" {
-  // Tempo recommends batching before export.
-  send_batch_size = 1000
-  timeout         = "5s"
-
-  output {
     traces = [otelcol.exporter.otlp.tempo.input]
   }
 }
 
 otelcol.exporter.otlp "tempo" {
+  // Batch at the exporter rather than via a standalone otelcol.processor.batch.
+  // Since Alloy v1.16 exporter-level batching is the preferred method (more
+  // flexible, one fewer component). min_size/flush_timeout preserve the prior
+  // send_batch_size=1000 / timeout=5s behavior.
+  batch {
+    min_size      = 1000
+    flush_timeout = "5s"
+  }
   client {
     endpoint = "tempo-distributor.monitoring.svc.cluster.local:4317"
     tls {
