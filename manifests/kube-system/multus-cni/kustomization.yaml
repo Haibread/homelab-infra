@@ -37,10 +37,10 @@ patches:
                 resources:
                   limits:
                     cpu: 600m
-                    memory: 300Mi
+                    memory: 1Gi
                   requests:
                     cpu: 400m
-                    memory: 200Mi
+                    memory: 256Mi
                 volumeMounts:
                   - name: host-run-netns
                     mountPath: /run/netns
