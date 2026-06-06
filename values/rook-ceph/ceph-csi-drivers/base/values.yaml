@@ -1,0 +1,35 @@
+# Rook-compatible values for the ceph-csi-drivers chart (new requirement in Rook v1.20).
+#
+# In v1.20 the CSI driver resources (service accounts, plugin/provisioner
+# deployments) were split out of the rook-ceph operator chart into this separate
+# chart. It MUST be installed or the CSI driver fails with missing service
+# accounts. The chart fails on its own defaults — these are the Rook-recommended
+# values. Driver names MUST match the provisioner names in our StorageClasses
+# (e.g. rook-ceph.rbd.csi.ceph.com in manifests/rook-ceph/rook-ceph/storageclass-default.yaml).
+#
+# Source: https://github.com/rook/rook/blob/master/deploy/charts/ceph-csi-drivers/values.yaml
+
+operatorConfig:
+  namespace: rook-ceph # namespace:operator
+  driverSpecDefaults:
+    imageSet:
+      # ConfigMap managed by the rook-ceph operator that pins the CSI image versions.
+      name: rook-csi-operator-image-set-configmap
+    nodePlugin:
+      priorityClassName: system-node-critical
+    controllerPlugin:
+      priorityClassName: system-cluster-critical
+
+drivers:
+  rbd:
+    enabled: true
+    name: rook-ceph.rbd.csi.ceph.com
+  cephfs:
+    enabled: true
+    name: rook-ceph.cephfs.csi.ceph.com
+  nfs:
+    enabled: false
+    name: rook-ceph.nfs.csi.ceph.com
+  nvmeof:
+    enabled: false
+    name: rook-ceph.nvmeof.csi.ceph.com

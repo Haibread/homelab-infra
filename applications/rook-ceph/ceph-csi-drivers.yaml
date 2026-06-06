@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ceph-csi-drivers
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://ceph.github.io/ceph-csi-operator
+    targetRevision: "1.0.1"
+    chart: ceph-csi-drivers
+    helm:
+      valueFiles:
+      - $values/values/rook-ceph/ceph-csi-drivers/base/values.yaml
+      - $values/values/rook-ceph/ceph-csi-drivers/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: rook-ceph
+  syncPolicy:
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
