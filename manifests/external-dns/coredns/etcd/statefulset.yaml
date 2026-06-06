@@ -3,6 +3,12 @@ kind: StatefulSet
 metadata:
   namespace: external-dns
   name: etcd
+  annotations:
+    # Stakater Reloader: roll the StatefulSet when the mounted etcd TLS
+    # secrets change. cert-manager rewrites etcd-server-tls / etcd-client-tls
+    # (new tls.crt + ca.crt) on CA rotation, so this picks up CA rotations
+    # automatically and avoids the stale-in-memory-CA peer mTLS breakage.
+    reloader.stakater.com/auto: "true"
 spec:
   serviceName: etcd
   replicas: 3

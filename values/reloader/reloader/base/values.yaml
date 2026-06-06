@@ -1,0 +1,11 @@
+reloader:
+  # Chart defaults already do what we want: watchGlobally=true and reloads
+  # only fire for workloads that opt in via the reloader.stakater.com/*
+  # annotations. Only the resource requests are overridden below.
+  deployment:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
