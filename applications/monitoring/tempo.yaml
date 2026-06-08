@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/grafana-community/helm-charts
-    targetRevision: "2.23.4"
+    targetRevision: "2.23.5"
     chart: tempo-distributed
     helm:
       valueFiles:
