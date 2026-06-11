@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/grafana-community/helm-charts
-    targetRevision: "17.2.0"
+    targetRevision: "17.3.1"
     chart: loki
     helm:
       valueFiles:
