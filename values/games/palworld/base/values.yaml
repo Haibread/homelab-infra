@@ -25,6 +25,12 @@ controllers:
           PLAYERS: "16"
           # Community listing requires a public IP and a password-less server.
           COMMUNITY: "false"
+          # Adds -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS.
+          ENABLE_PERF_THREADING_ARGS: "true"
+          # Always set this explicitly. The deprecated MULTITHREADING variable
+          # derives it from `nproc --all`, which reports the node's 56 cores
+          # rather than anything this pod was allocated.
+          WORKER_THREADS_SERVER: "6"
           # Both of these stay on the ClusterIP service only -- never expose
           # them through the LoadBalancer.
           REST_API_ENABLED: "true"
@@ -87,7 +93,9 @@ controllers:
               failureThreshold: 3
         resources:
           requests:
-            cpu: "2"
+            # Kept in the same ballpark as WORKER_THREADS_SERVER so the
+            # guaranteed share matches what the server actually spins up.
+            cpu: "4"
             memory: 16Gi
           limits:
             memory: 32Gi
