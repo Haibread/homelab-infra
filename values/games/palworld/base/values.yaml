@@ -1,0 +1,132 @@
+defaultPodOptions:
+  # The entrypoint traps SIGTERM to save the world and shut the server down
+  # cleanly. Upstream's compose file allows 30s; give it more headroom so a
+  # large save never gets SIGKILLed mid-write.
+  terminationGracePeriodSeconds: 120
+
+controllers:
+  palworld:
+    type: deployment
+    # Single replica on a ReadWriteOnce volume: the old pod has to release the
+    # PVC before the new one can mount it, so no rolling update.
+    strategy: Recreate
+    containers:
+      app:
+        image:
+          repository: ghcr.io/thijsvanloef/palworld-server-docker
+          tag: v2.7.1
+        env:
+          PUID: "1000"
+          PGID: "1000"
+          TZ: Europe/Paris
+          LOG_LEVEL: INFO
+          PORT: "8211"
+          QUERY_PORT: "27015"
+          PLAYERS: "16"
+          # Community listing requires a public IP and a password-less server.
+          COMMUNITY: "false"
+          # Both of these stay on the ClusterIP service only -- never expose
+          # them through the LoadBalancer.
+          REST_API_ENABLED: "true"
+          REST_API_PORT: "8212"
+          RCON_ENABLED: "true"
+          RCON_PORT: "25575"
+          # Pull the current game build from Steam on every start, so the
+          # server always matches what clients are running.
+          UPDATE_ON_BOOT: "true"
+          # In-container self-update and self-reboot are deliberately off:
+          # restarts are the pod's job, not the entrypoint's.
+          AUTO_UPDATE_ENABLED: "false"
+          AUTO_REBOOT_ENABLED: "false"
+          BACKUP_ENABLED: "true"
+          BACKUP_CRON_EXPRESSION: "0 3 * * *"
+          DELETE_OLD_BACKUPS: "true"
+          OLD_BACKUP_DAYS: "7"
+        envFrom:
+        - secretRef:
+            name: palworld-secret
+        probes:
+          # The image ships a pgrep-based healthcheck; there is no HTTP
+          # endpoint to hit without authenticating against the REST API.
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - pgrep
+                - PalServer-Linux
+              # First boot downloads ~8 GB through steamcmd, so allow 20
+              # minutes before declaring the container dead.
+              periodSeconds: 20
+              failureThreshold: 60
+          liveness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - pgrep
+                - PalServer-Linux
+              periodSeconds: 30
+              failureThreshold: 3
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - pgrep
+                - PalServer-Linux
+              periodSeconds: 30
+              failureThreshold: 3
+        resources:
+          requests:
+            cpu: "2"
+            memory: 16Gi
+          limits:
+            memory: 32Gi
+
+service:
+  # Player-facing traffic. UDP only, published on the LAN through Cilium LB
+  # IPAM + BGP -- Envoy Gateway is HTTP-only and cannot carry this.
+  game:
+    controller: palworld
+    primary: true
+    type: LoadBalancer
+    # Local preserves the client source IP, which is what shows up in the
+    # server logs and ban list. Cilium only advertises the VIP from nodes
+    # that actually hold a ready endpoint.
+    externalTrafficPolicy: Local
+    ports:
+      game:
+        port: 8211
+        protocol: UDP
+        primary: true
+      query:
+        port: 27015
+        protocol: UDP
+  # Admin surface: REST API and RCON. Cluster-internal on purpose.
+  admin:
+    controller: palworld
+    type: ClusterIP
+    ports:
+      rest:
+        port: 8212
+        protocol: TCP
+        primary: true
+      rcon:
+        port: 25575
+        protocol: TCP
+
+persistence:
+  # Holds the Steam game files (~8 GB), the world saves and the backups.
+  data:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 50Gi
+    # A wiped world is not recoverable from git. Keep the PVC around even if
+    # the Application is deleted.
+    retain: true
+    globalMounts:
+    - path: /palworld

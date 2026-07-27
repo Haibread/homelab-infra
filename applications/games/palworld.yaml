@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: palworld
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/bjw-s-labs/helm
+    targetRevision: "5.0.1"
+    chart: app-template
+    helm:
+      valueFiles:
+      - $values/values/games/palworld/base/values.yaml
+      - $values/values/games/palworld/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: games
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: baseline
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

@@ -1,0 +1,18 @@
+# Environment-specific overrides
+controllers:
+  palworld:
+    containers:
+      app:
+        env:
+          SERVER_NAME: newgamer
+          SERVER_DESCRIPTION: Palworld server hosted on the newgamer homelab
+
+service:
+  game:
+    annotations:
+      # Next free address in main-lb-ip-pool (172.16.111.20-30):
+      # .20 is coredns, .21 is the Envoy Gateway.
+      lbipam.cilium.io/ips: 172.16.111.22
+      # external-dns writes this into etcd under /skydns, CoreDNS serves it
+      # for the newgamer.lan zone.
+      external-dns.alpha.kubernetes.io/hostname: palworld.newgamer.lan
