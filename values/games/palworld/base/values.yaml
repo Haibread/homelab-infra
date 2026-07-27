@@ -98,6 +98,10 @@ service:
     # server logs and ban list. Cilium only advertises the VIP from nodes
     # that actually hold a ready endpoint.
     externalTrafficPolicy: Local
+    # Cilium runs with kube-proxy-replacement and serves the VIP natively, so
+    # the per-node ports Kubernetes allocates by default are never used --
+    # they would only add listening surface on every node.
+    allocateLoadBalancerNodePorts: false
     ports:
       game:
         port: 8211
