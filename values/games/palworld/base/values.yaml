@@ -34,9 +34,14 @@ controllers:
           # Pull the current game build from Steam on every start, so the
           # server always matches what clients are running.
           UPDATE_ON_BOOT: "true"
-          # In-container self-update and self-reboot are deliberately off:
-          # restarts are the pod's job, not the entrypoint's.
-          AUTO_UPDATE_ENABLED: "false"
+          # The image tag only pins the wrapper -- UPDATE_ON_BOOT already
+          # pulls whatever build Steam is serving, so the game version was
+          # never reproducible from git. Updating on a schedule just avoids
+          # the server refusing clients after a patch until someone notices.
+          AUTO_UPDATE_ENABLED: "true"
+          AUTO_UPDATE_CRON_EXPRESSION: "0 5 * * *"
+          AUTO_UPDATE_WARN_MINUTES: "15"
+          # Reboots stay off: that is the pod's job, not the entrypoint's.
           AUTO_REBOOT_ENABLED: "false"
           BACKUP_ENABLED: "true"
           BACKUP_CRON_EXPRESSION: "0 3 * * *"
