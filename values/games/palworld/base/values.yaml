@@ -53,6 +53,16 @@ controllers:
           BACKUP_CRON_EXPRESSION: "0 3 * * *"
           DELETE_OLD_BACKUPS: "true"
           OLD_BACKUP_DAYS: "7"
+          # Gameplay rates. These are *decrease* rates: lower drains slower,
+          # so 0.1 is the game's own minimum and makes flying mounts last
+          # roughly ten times longer. Player stamina is a separate knob
+          # (PLAYER_STAMINA_DECREASE_RATE) and stays at the default.
+          PAL_STAMINA_DECREASE_RATE: "0.100000"
+          EXP_RATE: "2.000000"
+          # Default is 15. Every worker is an AI agent to simulate, so this
+          # is the one setting here that pushes back against the perf
+          # threading tuning above -- raise it further only if it holds up.
+          BASE_CAMP_WORKER_MAX_NUM: "20"
         envFrom:
         - secretRef:
             name: palworld-secret
