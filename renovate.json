@@ -43,6 +43,17 @@
       "versioningTemplate": "semver"
     },
     {
+      "description": "CI tool versions pinned as *_VERSION env vars in workflows",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: extractVersion=(?<extractVersion>\\S+))?\\s+\\w+_VERSION:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "versioningTemplate": "semver"
+    },
+    {
       "customType": "regex",
       "managerFilePatterns": [
         "/^manifests/.+\\.ya?ml$/"

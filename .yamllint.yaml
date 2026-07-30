@@ -20,6 +20,3 @@ rules:
   commas: disable
   hyphens: disable
   empty-values: disable
-
-ignore: |
-  .github/

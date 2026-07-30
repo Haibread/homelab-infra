@@ -1,0 +1,25 @@
+---
+name: kubeconform
+description: Install a pinned kubeconform release and put it on PATH.
+
+inputs:
+  version:
+    description: kubeconform release version, without the leading "v".
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install kubeconform
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+        tmp="$(mktemp -d)"
+        curl -fsSL -o "$tmp/kubeconform.tgz" \
+          "https://github.com/yannh/kubeconform/releases/download/v${VERSION}/kubeconform-linux-amd64.tar.gz"
+        tar -xzf "$tmp/kubeconform.tgz" -C "$tmp" kubeconform
+        sudo install -m 0755 "$tmp/kubeconform" /usr/local/bin/
+        rm -rf "$tmp"
+        kubeconform -v
