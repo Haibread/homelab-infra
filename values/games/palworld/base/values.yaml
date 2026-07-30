@@ -42,10 +42,15 @@ controllers:
           UPDATE_ON_BOOT: "true"
           # The image tag only pins the wrapper -- UPDATE_ON_BOOT already
           # pulls whatever build Steam is serving, so the game version was
-          # never reproducible from git. Updating on a schedule just avoids
-          # the server refusing clients after a patch until someone notices.
+          # never reproducible from git. The check itself is one cheap HTTP
+          # call to api.steamcmd.net compared against the local manifest; it
+          # only becomes disruptive on the rare run where a patch actually
+          # landed, so checking every 15 minutes costs nothing on the other
+          # ~96 runs a day. Once daily left up to 24h where Steam had
+          # auto-updated clients but the server hadn't, so nobody could
+          # connect.
           AUTO_UPDATE_ENABLED: "true"
-          AUTO_UPDATE_CRON_EXPRESSION: "0 5 * * *"
+          AUTO_UPDATE_CRON_EXPRESSION: "*/15 * * * *"
           AUTO_UPDATE_WARN_MINUTES: "15"
           # Reboots stay off: that is the pod's job, not the entrypoint's.
           AUTO_REBOOT_ENABLED: "false"
