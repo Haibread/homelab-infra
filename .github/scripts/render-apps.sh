@@ -9,10 +9,18 @@
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-SCHEMA_LOCATIONS=(
-  "default"
-  "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json"
-)
+
+# Kept out of a ${VAR:-default} expansion on purpose: the Go template braces
+# in the URL would terminate the parameter expansion early and silently hand
+# kubeconform a truncated schema location.
+CRD_SCHEMA="${KUBECONFORM_CRD_SCHEMA:-}"
+if [[ -z "$CRD_SCHEMA" ]]; then
+  CRD_SCHEMA='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'
+fi
+SCHEMA_LOCATIONS=("default" "$CRD_SCHEMA")
+
+WORKDIR="$(mktemp -d)"
+trap 'rm -rf "$WORKDIR"' EXIT
 
 fail=0
 rendered=0
@@ -21,7 +29,7 @@ skipped=0
 mapfile -t APPS < <(find "$REPO_ROOT/applications" -type f -name '*.yaml' ! -name 'aoa.yaml' | sort)
 
 for app in "${APPS[@]}"; do
-  rel="${app#$REPO_ROOT/}"
+  rel="${app#"$REPO_ROOT"/}"
   kind="$(yq -r '.kind // ""' "$app")"
   [[ "$kind" != "Application" ]] && { echo "::notice::skip non-Application $rel"; skipped=$((skipped+1)); continue; }
 
@@ -59,15 +67,26 @@ for app in "${APPS[@]}"; do
   helm_args+=("${values_args[@]}")
 
   echo "=== rendering $rel ==="
-  out="$(mktemp)"
-  if ! helm "${helm_args[@]}" > "$out" 2> "$out.err"; then
+  raw="$WORKDIR/$name.raw.yaml"
+  out="$WORKDIR/$name.yaml"
+  if ! helm "${helm_args[@]}" > "$raw" 2> "$raw.err"; then
     echo "::error file=$rel::helm template failed"
-    cat "$out.err"
+    cat "$raw.err"
     fail=$((fail+1))
     continue
   fi
 
-  kubeconform_args=(-ignore-missing-schemas -summary)
+  # Helm 4 writes its OCI pull progress ("Pulled:" / "Digest:") to *stdout*,
+  # so it lands in the manifest stream as a bogus kind-less YAML document and
+  # kubeconform rejects the whole batch. Keep only real Kubernetes objects.
+  yq 'select(.kind != null)' "$raw" > "$out"
+  if [[ ! -s "$out" ]]; then
+    echo "::error file=$rel::helm template produced no Kubernetes objects"
+    fail=$((fail+1))
+    continue
+  fi
+
+  kubeconform_args=(-strict -ignore-missing-schemas -summary)
   if [[ -n "${KUBECONFORM_SKIP:-}" ]]; then
     kubeconform_args+=(-skip "$KUBECONFORM_SKIP")
   fi
@@ -75,7 +94,7 @@ for app in "${APPS[@]}"; do
     kubeconform_args+=(-schema-location "$loc")
   done
 
-  if ! kubeconform "${kubeconform_args[@]}" < "$out"; then
+  if ! kubeconform "${kubeconform_args[@]}" "$out"; then
     echo "::error file=$rel::kubeconform validation failed"
     fail=$((fail+1))
     continue

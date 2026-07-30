@@ -16,13 +16,25 @@ permissions:
   contents: read
 
 env:
-  # Pinned only where the download URL embeds the version. Tools with
-  # version-agnostic asset names are fetched from /releases/latest/download/.
+  # Every tool is pinned: an unpinned toolchain silently changes what CI means
+  # from one run to the next. Renovate bumps these through the customManager
+  # keyed on the "# renovate:" comments.
+  # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize extractVersion=^kustomize/v(?<version>.+)$
   KUSTOMIZE_VERSION: "5.8.1"
+  # renovate: datasource=github-releases depName=yannh/kubeconform extractVersion=^v(?<version>.+)$
+  KUBECONFORM_VERSION: "0.8.0"
+  # renovate: datasource=github-releases depName=mikefarah/yq extractVersion=^v(?<version>.+)$
+  YQ_VERSION: "4.53.3"
+  # renovate: datasource=github-releases depName=helm/helm extractVersion=^v(?<version>.+)$
+  HELM_VERSION: "4.2.3"
+
   # Kinds with CRD schemas in datreeio/CRDs-catalog that are too strict
   # (reject legitimate null values on optional object fields). Revisit when
   # a cleaner schema source is available.
-  KUBECONFORM_SKIP: "CephCluster,CephBlockPool,CephFilesystem,CephObjectStore,CephCluster/v1"
+  KUBECONFORM_SKIP: "CephCluster,CephBlockPool,CephFilesystem,CephObjectStore"
+  # Fallback schema source for CRDs the built-in Kubernetes schemas don't cover.
+  KUBECONFORM_CRD_SCHEMA: >-
+    https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json
 
 jobs:
   pre-commit:
@@ -37,28 +49,48 @@ jobs:
           python-version: "3.14"
       - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd  # v3.0.1
 
+  kubeconform-applications:
+    name: kubeconform (argocd applications)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      - uses: ./.github/actions/kubeconform
+        with:
+          version: ${{ env.KUBECONFORM_VERSION }}
+      - name: Validate ArgoCD Application manifests
+        # No -ignore-missing-schemas here on purpose: the whole point of this
+        # job is that the argoproj.io Application schema really was applied,
+        # so a missing schema must fail rather than pass silently.
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find applications -type f -name '*.yaml' | sort)
+          kubeconform \
+            -strict \
+            -summary \
+            -schema-location default \
+            -schema-location "${KUBECONFORM_CRD_SCHEMA}" \
+            "${files[@]}"
+
   kubeconform-raw:
     name: kubeconform (raw manifests)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
-      - name: Install kubeconform
-        run: |
-          curl -fsSL -o kc.tgz \
-            "https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz"
-          tar -xzf kc.tgz kubeconform
-          sudo install -m 0755 kubeconform /usr/local/bin/
+      - uses: ./.github/actions/kubeconform
+        with:
+          version: ${{ env.KUBECONFORM_VERSION }}
       - name: Validate raw manifest files
         run: |
           set -euo pipefail
           mapfile -t files < <(find manifests -type f -name '*.yaml' \
             ! -name 'kustomization.yaml' | sort)
           kubeconform \
+            -strict \
             -ignore-missing-schemas \
             -skip "${KUBECONFORM_SKIP}" \
             -summary \
             -schema-location default \
-            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
+            -schema-location "${KUBECONFORM_CRD_SCHEMA}" \
             "${files[@]}"
 
   kustomize-build:
@@ -66,18 +98,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      - uses: ./.github/actions/kubeconform
+        with:
+          version: ${{ env.KUBECONFORM_VERSION }}
       - name: Install kustomize
         run: |
+          set -euo pipefail
           curl -fsSL -o kz.tgz \
             "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz"
           tar -xzf kz.tgz kustomize
           sudo install -m 0755 kustomize /usr/local/bin/
-      - name: Install kubeconform
-        run: |
-          curl -fsSL -o kc.tgz \
-            "https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz"
-          tar -xzf kc.tgz kubeconform
-          sudo install -m 0755 kubeconform /usr/local/bin/
+          rm -f kz.tgz kustomize
       - name: Build every kustomization and validate
         run: |
           set -euo pipefail
@@ -86,11 +117,12 @@ jobs:
             dir="$(dirname "$k")"
             echo "=== kustomize build $dir ==="
             if ! kustomize build "$dir" | kubeconform \
+                -strict \
                 -ignore-missing-schemas \
                 -skip "${KUBECONFORM_SKIP}" \
                 -summary \
                 -schema-location default \
-                -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'; then
+                -schema-location "${KUBECONFORM_CRD_SCHEMA}"; then
               echo "::error file=$k::kustomize build / kubeconform failed"
               fail=$((fail+1))
             fi
@@ -103,8 +135,10 @@ jobs:
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
       - uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2  # v5.0.0
+        with:
+          version: "v${{ env.HELM_VERSION }}"
       - name: Cache Helm chart downloads
-        # Helm 3 on Linux stores repo indexes + pulled chart archives under
+        # Helm stores repo indexes + pulled chart archives under
         # ~/.cache/helm/repository and OCI chart blobs under registry/cache.
         # The key is re-derived from every Application manifest so a chart
         # version bump invalidates the cache automatically.
@@ -116,20 +150,17 @@ jobs:
           key: helm-${{ runner.os }}-${{ hashFiles('applications/**/*.yaml') }}
           restore-keys: |
             helm-${{ runner.os }}-
+      - uses: ./.github/actions/kubeconform
+        with:
+          version: ${{ env.KUBECONFORM_VERSION }}
       - name: Install yq
         run: |
+          set -euo pipefail
           sudo curl -fsSL -o /usr/local/bin/yq \
-            "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64"
+            "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
           sudo chmod +x /usr/local/bin/yq
-      - name: Install kubeconform
-        run: |
-          curl -fsSL -o kc.tgz \
-            "https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz"
-          tar -xzf kc.tgz kubeconform
-          sudo install -m 0755 kubeconform /usr/local/bin/
+          yq --version
       - name: Render and validate every Application
-        env:
-          KUBECONFORM_SKIP: ${{ env.KUBECONFORM_SKIP }}
         run: bash .github/scripts/render-apps.sh
 
   renovate-config:

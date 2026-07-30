@@ -15,5 +15,6 @@ spec:
     targetRevision: "HEAD"
     directory:
       recurse: true
-  syncPolicy:
-    #automated: {}
+  # syncPolicy is intentionally absent: the app-of-apps is synced by hand.
+  # An empty `syncPolicy:` key serialises to null and is rejected by the
+  # Application schema.
