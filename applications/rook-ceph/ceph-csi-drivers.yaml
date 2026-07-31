@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: https://ceph.github.io/ceph-csi-operator
-    targetRevision: "1.0.1"
+    targetRevision: "1.0.4"
     chart: ceph-csi-drivers
     helm:
       valueFiles:
