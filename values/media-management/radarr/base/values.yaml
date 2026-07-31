@@ -4,7 +4,7 @@ controllers:
       app:
         image:
           repository: lscr.io/linuxserver/radarr
-          tag: 6.2.1.10461-ls305
+          tag: 6.3.0.10514-ls312
         env:
           PUID: "1000"
           PGID: "1000"
