@@ -30,7 +30,7 @@ controllers:
           # Always set this explicitly. The deprecated MULTITHREADING variable
           # derives it from `nproc --all`, which reports the node's 56 cores
           # rather than anything this pod was allocated.
-          WORKER_THREADS_SERVER: "6"
+          WORKER_THREADS_SERVER: "10"
           # Both of these stay on the ClusterIP service only -- never expose
           # them through the LoadBalancer.
           REST_API_ENABLED: "true"
