@@ -18,7 +18,7 @@ spec:
         - operator: Exists
       initContainers:
         - name: bridge-vlan-setup
-          image: nicolaka/netshoot:v0.15
+          image: nicolaka/netshoot:v0.16
           command:
             - /bin/sh
             - -c
