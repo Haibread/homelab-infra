@@ -52,8 +52,32 @@ controllers:
           AUTO_UPDATE_ENABLED: "true"
           AUTO_UPDATE_CRON_EXPRESSION: "*/15 * * * *"
           AUTO_UPDATE_WARN_MINUTES: "15"
-          # Reboots stay off: that is the pod's job, not the entrypoint's.
-          AUTO_REBOOT_ENABLED: "false"
+          # Nightly reboot at 05:00 Europe/Paris (supercronic honours TZ),
+          # two hours clear of the 03:00 backup. It runs unconditionally --
+          # see AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE below -- though at that
+          # hour it usually finds the server empty anyway.
+          #
+          # Mechanically it is a clean save + `rest-cli shutdown`: the
+          # process exits and kubelet restarts the container in place under
+          # the deployment's default restartPolicy: Always, so the PVC is
+          # never unmounted. That is gentler than recreating the pod, and
+          # the reason this lives in the entrypoint instead of a CronJob
+          # running `kubectl rollout restart`. auto_reboot.sh hard-requires
+          # REST_API_ENABLED and gives up if it is ever turned off above.
+          AUTO_REBOOT_ENABLED: "true"
+          AUTO_REBOOT_CRON_EXPRESSION: "0 5 * * *"
+          # Reboot even with players connected, skipping the player-count
+          # check entirely. A reboot any single night owl can veto is one
+          # that quietly stops happening during exactly the busy stretches
+          # that make it worth having; the countdown below is what keeps
+          # that civil.
+          AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE: "true"
+          # With the check above skipped this is a real grace period rather
+          # than a formality. countdown_message broadcasts at 5, 3, 2 and 1
+          # minutes, then at 30s and 10s, and re-polls the player list every
+          # minute so it cuts the wait short once the last player logs off.
+          # On an already empty server it returns immediately.
+          AUTO_REBOOT_WARN_MINUTES: "5"
           BACKUP_ENABLED: "true"
           BACKUP_CRON_EXPRESSION: "0 3 * * *"
           DELETE_OLD_BACKUPS: "true"
@@ -63,6 +87,17 @@ controllers:
           # roughly ten times longer. Player stamina is a separate knob
           # (PLAYER_STAMINA_DECREASE_RATE) and stays at the default.
           PAL_STAMINA_DECREASE_RATE: "0.100000"
+          # Hunger, same idea: pals get peckish roughly three times less
+          # often. Not at the 0.1 floor because that would retire the whole
+          # food chain -- plantations and ranches stop mattering when nobody
+          # ever eats. 0.3 keeps food a thing you produce while killing the
+          # part nobody enjoys, base workers abandoning their station every
+          # few minutes to walk to the feed box. That last bit is also why
+          # this is mildly good for the server: every trip to the box is AI
+          # pathing we no longer simulate, which pushes the same direction
+          # as the worker tuning above. Player hunger is a separate knob
+          # (PLAYER_STOMACH_DECREASE_RATE) and stays at the default.
+          PAL_STOMACH_DECREASE_RATE: "0.300000"
           EXP_RATE: "2.000000"
           # Default is 15. Every worker is an AI agent to simulate, so this
           # is the one setting here that pushes back against the perf
@@ -72,6 +107,13 @@ controllers:
           # workers crammed into one: an empty base has no AI to simulate
           # until someone staffs it.
           BASE_CAMP_MAX_NUM_IN_GUILD: "8"
+          # Seconds between autosaves, default 30. Each save is a brief
+          # hitch everyone feels, so halving their frequency halves the
+          # stutter. The trade is up to 60s of lost progress -- but only on
+          # an unclean death (node loss, OOM kill, SIGKILL). Every ordinary
+          # stop already saves first: the entrypoint traps SIGTERM, and the
+          # nightly reboot calls save_server before shutting down.
+          AUTO_SAVE_SPAN: "60.000000"
         envFrom:
         - secretRef:
             name: palworld-secret
