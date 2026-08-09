@@ -4,7 +4,7 @@ controllers:
       app:
         image:
           repository: lscr.io/linuxserver/sonarr
-          tag: 4.0.19.2979-ls320
+          tag: 4.0.19.2979-ls321
         env:
           PUID: "1000"
           PGID: "1000"
