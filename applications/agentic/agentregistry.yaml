@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: ghcr.io/agentregistry-dev/agentregistry/charts
-    targetRevision: "0.3.3"
+    targetRevision: "0.4.0"
     chart: agentregistry
     helm:
       valueFiles:
