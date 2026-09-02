@@ -12,7 +12,7 @@ spec:
     # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
     # If you want to be more precise, you can always use a timestamp tag such as quay.io/ceph/ceph:v19.2.3-20250717
     # This tag might not contain a new Ceph version, just security fixes from the underlying operating system, which will reduce vulnerabilities
-    image: quay.io/ceph/ceph:v20.2.3
+    image: quay.io/ceph/ceph:v21.1.0
     # Whether to allow unsupported versions of Ceph. Rook v1.20 supports Squid (v19)
     # and Tentacle (v20.2.1+), so this no longer needs to be true for our v20.2.1 image.
     # Keeping it false re-arms the guard against an accidental jump to an unsupported major.
