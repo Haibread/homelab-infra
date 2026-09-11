@@ -24,7 +24,7 @@ env:
   # renovate: datasource=github-releases depName=yannh/kubeconform extractVersion=^v(?<version>.+)$
   KUBECONFORM_VERSION: "0.8.0"
   # renovate: datasource=github-releases depName=mikefarah/yq extractVersion=^v(?<version>.+)$
-  YQ_VERSION: "4.53.3"
+  YQ_VERSION: "4.53.6"
   # renovate: datasource=github-releases depName=helm/helm extractVersion=^v(?<version>.+)$
   HELM_VERSION: "4.2.3"
 
