@@ -14,7 +14,7 @@ controllers:
       app:
         image:
           repository: ghcr.io/thijsvanloef/palworld-server-docker
-          tag: v2.7.1
+          tag: v2.7.3
         env:
           PUID: "1000"
           PGID: "1000"
