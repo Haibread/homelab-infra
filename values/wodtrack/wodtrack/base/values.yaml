@@ -1,0 +1,27 @@
+app:
+  image:
+    tag: "0.1.0-rc1"
+  # The GHCR image package is private: `ghcr-pull` is a docker-registry secret
+  # created by hand in the namespace with a token that has `read:packages`.
+  imagePullSecrets:
+    - name: ghcr-pull
+  annotations:
+    reloader.stakater.com/auto: "true"
+  # Created by hand in the namespace, never committed: BETTER_AUTH_SECRET and,
+  # to enable the photo scan, OPENROUTER_API_KEY.
+  auth:
+    existingSecret:
+      name: wodtrack
+  scan:
+    existingSecret:
+      name: wodtrack
+
+database:
+  cnpg:
+    enabled: true
+
+route:
+  enabled: true
+  gateway:
+    name: homelab
+    namespace: envoy-gateway

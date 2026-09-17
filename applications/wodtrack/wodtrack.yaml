@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wodtrack
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 0
+  sources:
+  - repoURL: ghcr.io/haibread/charts
+    targetRevision: "0.1.0-rc1"
+    chart: wodtrack
+    helm:
+      valueFiles:
+      - $values/values/wodtrack/wodtrack/base/values.yaml
+      - $values/values/wodtrack/wodtrack/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: wodtrack
+  ignoreDifferences:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    jqPathExpressions:
+    - '.spec.parentRefs[]?.group'
+    - '.spec.parentRefs[]?.kind'
+    - '.spec.rules[]?.backendRefs[]?.group'
+    - '.spec.rules[]?.backendRefs[]?.kind'
+    - '.spec.rules[]?.backendRefs[]?.weight'
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: baseline
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

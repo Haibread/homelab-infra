@@ -1,0 +1,10 @@
+app:
+  auth:
+    # Session cookies and password-reset links are built from this origin, so
+    # it is the one the browser reaches through the gateway.
+    publicUrl: https://wodtrack.newgamer.lan
+  signupAllowlist: theobarbou@gmail.com
+
+route:
+  hostnames:
+    - wodtrack.newgamer.lan
