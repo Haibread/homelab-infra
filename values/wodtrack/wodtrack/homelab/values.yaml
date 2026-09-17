@@ -1,10 +1,15 @@
 app:
   auth:
     # Session cookies and password-reset links are built from this origin, so
-    # it is the one the browser reaches through the gateway.
-    publicUrl: https://wodtrack.newgamer.lan
-  signupAllowlist: theobarbou@gmail.com
+    # it is the public one: a reset link must be reachable from outside.
+    publicUrl: https://wodtrack.basget.io
+    # The name the cluster's own DNS serves. The browser's Origin is then that
+    # one, and Better Auth refuses what it has not been told about.
+    extraOrigins:
+      - https://wodtrack.newgamer.lan
+  signupAllowlist: theobarbou@gmail.com,pascal.locaputo@gmail.com
 
 route:
   hostnames:
     - wodtrack.newgamer.lan
+    - wodtrack.basget.io

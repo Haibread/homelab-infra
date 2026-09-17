@@ -1,6 +1,6 @@
 app:
   image:
-    tag: "0.1.0-rc1"
+    tag: "0.1.0-rc2"
   # The GHCR image package is private: `ghcr-pull` is a docker-registry secret
   # created by hand in the namespace with a token that has `read:packages`.
   imagePullSecrets:
