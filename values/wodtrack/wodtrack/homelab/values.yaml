@@ -7,6 +7,11 @@ app:
     # one, and Better Auth refuses what it has not been told about.
     extraOrigins:
       - https://wodtrack.newgamer.lan
+    # The hop the upstream proxy is seen as from inside the cluster. Without
+    # it Better Auth refuses the two-entry `X-Forwarded-For` and rate-limits
+    # every caller in one shared bucket.
+    trustedProxies:
+      - 10.0.10.0/24
   signupAllowlist: theobarbou@gmail.com,pascal.locaputo@gmail.com
 
 route:

@@ -8,7 +8,7 @@ spec:
   revisionHistoryLimit: 0
   sources:
   - repoURL: ghcr.io/haibread/charts
-    targetRevision: "0.1.0-rc2"
+    targetRevision: "0.1.0-rc3"
     chart: wodtrack
     helm:
       valueFiles:
