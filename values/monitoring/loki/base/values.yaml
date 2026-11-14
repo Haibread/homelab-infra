@@ -4,30 +4,6 @@ global:
   extraArgs:
     - -config.expand-env=true
 
-chunks_bucket_env: &chunks_bucket_env
-    - name: AWS_ACCESS_KEY_ID
-      valueFrom:
-        secretKeyRef:
-          name: loki-chunks
-          key: AWS_ACCESS_KEY_ID
-    - name: AWS_SECRET_ACCESS_KEY
-      valueFrom:
-        secretKeyRef:
-          name: loki-chunks
-          key: AWS_SECRET_ACCESS_KEY
-
-ruler_bucket_env: &ruler_bucket_env
-    - name: AWS_ACCESS_KEY_ID
-      valueFrom:
-        secretKeyRef:
-          name: loki-ruler
-          key: AWS_ACCESS_KEY_ID
-    - name: AWS_SECRET_ACCESS_KEY
-      valueFrom:
-        secretKeyRef:
-          name: loki-ruler
-          key: AWS_SECRET_ACCESS_KEY
-
 loki:
   auth_enabled: true
 
@@ -79,7 +55,17 @@ loki:
 
 ingester:
   replicas: 3
-  extraEnv: *chunks_bucket_env
+  extraEnv: &chunks_bucket_env
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: loki-chunks
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: loki-chunks
+          key: AWS_SECRET_ACCESS_KEY
   zoneAwareReplication:
     enabled: false
 querier:
@@ -107,7 +93,17 @@ indexGateway:
 ruler:
   replicas: 2
   maxUnavailable: 1
-  extraEnv: *ruler_bucket_env
+  extraEnv:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: loki-ruler
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: loki-ruler
+          key: AWS_SECRET_ACCESS_KEY
 gateway:
   replicas: 2
   maxUnavailable: 1
