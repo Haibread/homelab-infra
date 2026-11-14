@@ -1,0 +1,25 @@
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: tempo-traces
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  # Tempo's partition count is the ceiling on active partitions, and it can be
+  # raised later but never lowered. Four leaves room for the live-store and
+  # block-builder replicas to grow well past what this cluster needs.
+  partitions: 4
+  replicas: 3
+  config:
+    # Log compaction would drop records before Tempo's block-builders have
+    # consumed them, so retention has to be purely time based.
+    cleanup.policy: delete
+    retention.ms: "86400000"
+    # A restarting live-store can replay twice the 20 minute block timeout, so
+    # retention must stay well above 40 minutes; 24 hours also covers a
+    # block-builder outage and its catch-up.
+    min.insync.replicas: "2"
+    # Tempo produces record batches up to this size.
+    max.message.bytes: "16000000"

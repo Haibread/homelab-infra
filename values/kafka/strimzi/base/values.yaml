@@ -1,0 +1,12 @@
+generateNetworkPolicy: false
+# Nothing else in this cluster runs a NetworkPolicy and Cilium is in default
+# enforcement mode, so letting the operator generate them would make kafka the
+# only policy-enforced namespace and could silently cut off cross-namespace
+# clients such as Tempo in monitoring.
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 384Mi
+  limits:
+    memory: 384Mi
