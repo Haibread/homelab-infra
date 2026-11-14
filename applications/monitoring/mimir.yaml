@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: https://grafana.github.io/helm-charts
-    targetRevision: "6.2.0"
+    targetRevision: "6.2.2"
     chart: mimir-distributed
     helm:
       valueFiles:
