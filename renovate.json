@@ -85,6 +85,11 @@
       "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
       "automerge": true,
       "platformAutomerge": true
+    },
+    {
+      "description": "Ceph daemon image upgrades walk the mons, mgrs and OSDs in sequence and need a healthy cluster to start from, so they are sequenced by hand instead of landing on their own.",
+      "matchPackageNames": ["quay.io/ceph/ceph"],
+      "automerge": false
     }
   ]
 }
