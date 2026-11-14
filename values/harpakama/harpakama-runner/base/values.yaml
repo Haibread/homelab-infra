@@ -1,0 +1,148 @@
+# Linux test runner for Harpakama. Its scripts/remote.sh pushes a commit into
+# this pod with `kubectl exec` and runs the tests here; nothing in the pod
+# fetches the code itself, and nothing listens on the network.
+
+defaultPodOptions:
+  # The pause container becomes PID 1 and reaps the processes a cancelled run
+  # orphans; `sleep` as PID 1 would leave them as zombies.
+  shareProcessNamespace: true
+  terminationGracePeriodSeconds: 5
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
+    # The volume holds millions of build-cache files: a recursive chown on
+    # every start would take minutes.
+    fsGroupChangePolicy: OnRootMismatch
+    seccompProfile:
+      type: RuntimeDefault
+
+controllers:
+  runner:
+    type: deployment
+    revisionHistoryLimit: 0
+    # Single replica on a ReadWriteOnce volume: the old pod has to release the
+    # PVC before the new one can mount it.
+    strategy: Recreate
+    defaultContainerOptions:
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+          - ALL
+    initContainers:
+      # Release artefacts checked against their sha256: no image of ours to
+      # build, and pre-commit's zipapp bundles its dependencies, so the
+      # image's own python3 (pulled in by mercurial) runs it without pip.
+      tools:
+        image:
+          repository: golang
+          tag: 1.27.3-trixie@sha256:af1bfc2614ebb1dbd31af514b78740fd678850e76498762b425ecee4c5c6ea80
+        command:
+        - sh
+        - -ec
+        - |
+          mkdir -p /tools/bin /tools/lib
+          curl -fsSL -o /tmp/golangci-lint.tar.gz "$GOLANGCI_LINT_URL"
+          echo "$GOLANGCI_LINT_SHA256  /tmp/golangci-lint.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/golangci-lint.tar.gz -C /tools/bin --strip-components=1 --wildcards '*/golangci-lint'
+          curl -fsSL -o /tools/lib/pre-commit.pyz "$PRE_COMMIT_URL"
+          echo "$PRE_COMMIT_SHA256  /tools/lib/pre-commit.pyz" | sha256sum -c -
+          printf '#!/bin/sh\nexec python3 /tools/lib/pre-commit.pyz "$@"\n' >/tools/bin/pre-commit
+          printf '#!/bin/sh\nexec python3 -m sqlite3 "$@"\n' >/tools/bin/sqlite3
+          chmod 755 /tools/bin/pre-commit /tools/bin/sqlite3
+        env:
+          # Follows the golangci-lint rev in Harpakama's .pre-commit-config.yaml.
+          GOLANGCI_LINT_URL: https://github.com/golangci/golangci-lint/releases/download/v2.15.0/golangci-lint-2.15.0-linux-amd64.tar.gz
+          GOLANGCI_LINT_SHA256: 9b7fe6a6bf6334b98decf8d86b11415ea7889afdabdd1959fdce23af2a9ebcea
+          PRE_COMMIT_URL: https://github.com/pre-commit/pre-commit/releases/download/v4.7.0/pre-commit-4.7.0.pyz
+          PRE_COMMIT_SHA256: 393488513aed286d7a5a978a1fe79b2f5a8802927242a2d241ff10c1a8e8c885
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+            ephemeral-storage: 64Mi
+          limits:
+            memory: 256Mi
+            ephemeral-storage: 256Mi
+    containers:
+      runner:
+        image:
+          repository: golang
+          tag: 1.27.3-trixie@sha256:af1bfc2614ebb1dbd31af514b78740fd678850e76498762b425ecee4c5c6ea80
+        command:
+        - sh
+        - -c
+        - mkdir -p /srv/home /srv/cache /srv/data /srv/runs && exec sleep infinity
+        env:
+          PATH: /tools/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          HOME: /srv/home
+          GOPATH: /srv/cache/go
+          GOCACHE: /srv/cache/go-build
+          GOLANGCI_LINT_CACHE: /srv/cache/golangci-lint
+          PRE_COMMIT_HOME: /srv/cache/pre-commit
+          XDG_CACHE_HOME: /srv/cache/xdg
+          XDG_DATA_HOME: /srv/data
+          GOFLAGS: -trimpath
+          # A go.mod ahead of the image fetches the toolchain it names, once,
+          # into the module cache.
+          GOTOOLCHAIN: auto
+          TMPDIR: /tmp
+        probes:
+          liveness:
+            enabled: false
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - test
+                - -x
+                - /tools/bin/golangci-lint
+              periodSeconds: 10
+          startup:
+            enabled: false
+        # No CPU limit: Go sizes its parallelism from the node, and several
+        # suites share the burst the request does not cover.
+        resources:
+          requests:
+            cpu: "16"
+            memory: 16Gi
+            ephemeral-storage: 8Gi
+          limits:
+            memory: 48Gi
+            ephemeral-storage: 40Gi
+
+persistence:
+  # Build and module caches, pre-commit environments, the snapshot of the
+  # live data and one checkout per run: everything here can be rebuilt.
+  srv:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    storageClass: rook-ceph-block
+    size: 100Gi
+    advancedMounts:
+      runner:
+        runner:
+        - path: /srv
+  tools:
+    type: emptyDir
+    advancedMounts:
+      runner:
+        tools:
+        - path: /tools
+        runner:
+        - path: /tools
+          readOnly: true
+  tmp:
+    type: emptyDir
+    sizeLimit: 30Gi
+    advancedMounts:
+      runner:
+        tools:
+        - path: /tmp
+        runner:
+        - path: /tmp

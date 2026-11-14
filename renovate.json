@@ -82,6 +82,13 @@
       ]
     },
     {
+      "description": "The Harpakama runner's Go follows Harpakama's go.mod, which GOTOOLCHAIN=auto fetches anyway",
+      "matchFileNames": ["values/harpakama/**"],
+      "matchPackageNames": ["golang"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
       "automerge": true,
       "platformAutomerge": true

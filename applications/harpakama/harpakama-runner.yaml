@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harpakama-runner
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 0
+  sources:
+  - repoURL: ghcr.io/bjw-s-labs/helm
+    targetRevision: "5.3.0"
+    chart: app-template
+    helm:
+      valueFiles:
+      - $values/values/harpakama/harpakama-runner/base/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: harpakama
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: restricted
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false

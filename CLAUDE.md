@@ -81,6 +81,9 @@ Grafana, Loki (logs), Mimir (long-term metrics), Alloy (agent). Prometheus itsel
 ### Media Stack (`media-management/` namespace)
 Radarr, Sonarr, Lidarr, Bazarr, Prowlarr, Flaresolverr, Tautulli, Seerr, Requestrr — all using the `bjw-s/app-template` Helm chart.
 
+### Harpakama test runner (`harpakama/` namespace)
+`harpakama-runner` is an idle Go pod (`bjw-s/app-template`) that Harpakama's `scripts/remote.sh` drives with `kubectl exec`: it pushes a commit as a `git bundle`, then runs the tests, pre-commit or the comparison on the snapshot of the live data. The pod has no network listener and no credential; it reaches out only for Go modules, pre-commit hook repositories and the release artefacts its init container checks against a sha256. Its volume holds caches, the snapshot and one checkout per run — all disposable. The Go image follows Harpakama's `go.mod`, and golangci-lint the rev in Harpakama's `.pre-commit-config.yaml`: bump them with those, not on their own.
+
 ## Adding a New Application
 
 1. Create `applications/{namespace}/{app}.yaml` — ArgoCD Application manifest
