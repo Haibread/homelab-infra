@@ -1,4 +1,18 @@
-traces_bucket_env: &traces_bucket_env
+---
+# Tempo 3.x write path: distributor -> Kafka -> block-builder (blocks to S3)
+#                                          \-> live-store (recent-trace reads)
+# The ingester and the standalone compactor are gone; compaction and retention
+# run in backend-scheduler + backend-worker.
+
+multitenancyEnabled: true
+
+# Every Tempo binary pod reads the S3 credentials from the ObjectBucketClaim
+# secret and expands them out of tempo.yaml at startup. `defaults` feeds only
+# the Tempo pod template, so the nginx gateway and memcached are untouched.
+defaults:
+  extraArgs:
+  - "-config.expand-env=true"
+  extraEnv:
   - name: AWS_ACCESS_KEY_ID
     valueFrom:
       secretKeyRef:
@@ -9,11 +23,6 @@ traces_bucket_env: &traces_bucket_env
       secretKeyRef:
         name: tempo-traces
         key: AWS_SECRET_ACCESS_KEY
-
-global_extraArgs: &global_extraArgs
-  - "-config.expand-env=true"
-
-multitenancyEnabled: true
 
 traces:
   otlp:
@@ -34,33 +43,47 @@ storage:
       insecure: true
       forcepathstyle: true
 
-ingester:
-  replicas: 3
-  extraArgs: *global_extraArgs
-  extraEnv: *traces_bucket_env
+# The topic is created and sized by the Strimzi KafkaTopic, not by Tempo.
+ingest:
+  kafka:
+    address: kafka-kafka-bootstrap.kafka.svc.cluster.local:9092
+    topic: tempo-traces
+    auto_create_topic_enabled: false
+
+# Two pods cover the topic's four partitions: ordinal 0 takes partitions 0-1,
+# ordinal 1 takes 2-3. Every partition has a consumer, which is what keeps
+# records from expiring in Kafka before they reach object storage.
+blockBuilder:
+  enabled: true
+  replicas: 2
+  config:
+    partitions_per_instance: 2
+
+# One live-store per partition: a partition only becomes a write target once a
+# live-store owns it, and only its owner serves that partition's recent traces.
+liveStore:
+  enabled: true
+  replicas: 4
+  # A retained volume lets a live-store resume from its committed Kafka offset
+  # instead of replaying the whole lookback window on every restart.
   persistence:
     enabled: true
-    size: 20Gi
+    size: 5Gi
+
+backendScheduler:
+  enabled: true
+
+backendWorker:
+  replicas: 1
 
 distributor:
   replicas: 2
-  extraArgs: *global_extraArgs
-  extraEnv: *traces_bucket_env
-
-compactor:
-  replicas: 1
-  extraArgs: *global_extraArgs
-  extraEnv: *traces_bucket_env
 
 querier:
   replicas: 2
-  extraArgs: *global_extraArgs
-  extraEnv: *traces_bucket_env
 
 queryFrontend:
   replicas: 2
-  extraArgs: *global_extraArgs
-  extraEnv: *traces_bucket_env
 
 metricsGenerator:
   enabled: false
@@ -68,9 +91,7 @@ metricsGenerator:
 memcached:
   enabled: true
   replicas: 1
-
-minio:
-  enabled: false
+  allocatedMemory: 512
 
 gateway:
   enabled: true
