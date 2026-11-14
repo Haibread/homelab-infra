@@ -1,4 +1,12 @@
 ---
+global:
+  networkPolicy:
+    # Chart 10.x defaults this to true. Nothing else in this cluster runs a
+    # NetworkPolicy, so enabling it here would make argocd the only
+    # policy-enforced namespace, and Argo CD is the one component that
+    # cannot be repaired through GitOps if it cuts itself off.
+    create: false
+
 server:
   service:
     appProtocol: true # gRPS cli HTTP/2
