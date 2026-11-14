@@ -39,6 +39,16 @@ spec:
   # This configuration will be ignored if `skipUpgradeChecks` is `true`.
   # Default is false.
   upgradeOSDRequiresHealthyPGs: false
+  security:
+    cephx:
+      daemon:
+        # Ceph Tentacle reports aes cephx daemon keys as AUTH_INSECURE_SERVICE_KEY_TYPE,
+        # which is ERR-level and keeps the whole cluster in HEALTH_ERR -- that in turn
+        # blocks any Rook or Ceph version upgrade. Rotating the daemon keys to aes256k
+        # clears it. Bump keyGeneration again to force a future rotation.
+        keyRotationPolicy: KeyGeneration
+        keyGeneration: 2
+        keyType: aes256k
   mon:
     # Set the number of mons to be started. Generally recommended to be 3.
     # For highest availability, an odd number of mons should be specified.
