@@ -1,0 +1,55 @@
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: combined
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  replicas: 3
+  roles:
+    # Combined controller+broker nodes. Three of them give the quorum a
+    # majority and satisfy replication factor 3 without running a second pool.
+    - controller
+    - broker
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: 20Gi
+        class: rook-ceph-block
+        deleteClaim: false
+---
+apiVersion: kafka.strimzi.io/v1
+kind: Kafka
+metadata:
+  name: kafka
+  namespace: kafka
+  annotations:
+    strimzi.io/node-pools: enabled
+    strimzi.io/kraft: enabled
+spec:
+  kafka:
+    version: 4.3.2
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+    config:
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      # Tempo pre-creates its topic and must not rely on auto-creation.
+      auto.create.topics.enable: false
+      # Tempo produces record batches up to 16000000 bytes; this is the
+      # broker-wide ceiling that the per-topic limit sits under.
+      message.max.bytes: 16000000
+      replica.fetch.max.bytes: 16000000
+  entityOperator:
+    # Required for KafkaTopic resources to be reconciled.
+    topicOperator: {}

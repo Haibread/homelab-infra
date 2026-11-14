@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: strimzi
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://strimzi.io/charts/
+    targetRevision: "1.3.1"
+    chart: strimzi-kafka-operator
+    helm:
+      valueFiles:
+      - $values/values/kafka/strimzi/base/values.yaml
+      - $values/values/kafka/strimzi/homelab/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    path: manifests/kafka/strimzi/
+  destination:
+    name: in-cluster
+    namespace: kafka
+  syncPolicy:
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
