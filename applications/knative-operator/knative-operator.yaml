@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: https://knative.github.io/operator
-    targetRevision: "v1.23.1"
+    targetRevision: "v1.24.0"
     chart: knative-operator
     helm: {}
       #valueFiles:
