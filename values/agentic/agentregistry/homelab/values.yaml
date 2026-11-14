@@ -1,16 +1,14 @@
-config:
-  jwtPrivateKey: "296c7e9a7b0260f9ca0fcb82da663f1f2ff8e14e7cd04252ee02cff5aadc4abf" # Switch to a secret later
-
 database:
   postgres:
-    # Dummy value to satisfy chart validation — overridden at runtime by extraEnvVars below
-    url: "postgres://placeholder"
-    bundled:
-      enabled: false
-
-extraEnvVars:
-  - name: AGENT_REGISTRY_DATABASE_URL
-    valueFrom:
-      secretKeyRef:
+    type: external
+    external:
+      secretRef:
         name: agentregistry-pg-app
         key: uri
+
+extraEnvVars:
+  - name: AGENT_REGISTRY_JWT_PRIVATE_KEY
+    valueFrom:
+      secretKeyRef:
+        name: agentregistry
+        key: AGENT_REGISTRY_JWT_PRIVATE_KEY
