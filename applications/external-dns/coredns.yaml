@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: https://coredns.github.io/helm
-    targetRevision: "1.50.7"
+    targetRevision: "1.50.8"
     chart: coredns
     helm:
       valueFiles:
