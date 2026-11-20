@@ -1,9 +1,0 @@
-apiVersion: objectbucket.io/v1alpha1
-kind: ObjectBucketClaim
-metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-  name: agentregistry-pg-backups
-spec:
-  bucketName: agentregistry-pg-backups
-  storageClassName: rook-ceph-bucket-main-retain
