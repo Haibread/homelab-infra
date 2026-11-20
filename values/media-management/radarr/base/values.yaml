@@ -14,12 +14,23 @@ controllers:
             enabled: true
           readiness:
             enabled: true
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              tcpSocket:
+                port: 7878
+              periodSeconds: 10
+              # Database migrations run before the port opens; on this library
+              # (~18 GiB of /config) a major upgrade takes minutes, and the
+              # 30 s liveness window would kill the pod mid-migration.
+              failureThreshold: 180
         resources:
           requests:
             cpu: 100m
             memory: 256Mi
           limits:
-            memory: 1Gi
+            memory: 2Gi
 
 service:
   app:
