@@ -76,7 +76,7 @@ Grafana, Loki (logs), Mimir (long-term metrics), Alloy (agent). Prometheus itsel
 
 ### AI / Agentic Stack (`agentic/` namespace)
 - **KServe** + **Knative** (`knative-operator/`) serve ML models
-- **kagent**, **ai-registry**, **agentregistry**, **overseerr-mcp** — agent runtime, model/agent registries, and an MCP server integration
+- **kagent**, **ai-registry**, **overseerr-mcp** — agent runtime, model/agent registry, and an MCP server integration
 
 ### Media Stack (`media-management/` namespace)
 Radarr, Sonarr, Lidarr, Bazarr, Prowlarr, Flaresolverr, Tautulli, Seerr — all using the `bjw-s/app-template` Helm chart.
