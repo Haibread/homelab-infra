@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: plugin-barman-cloud
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 0
+  sources:
+  - repoURL: ghcr.io/cloudnative-pg/charts
+    targetRevision: "0.9.0"
+    chart: plugin-barman-cloud
+    helm:
+      valueFiles:
+      - $values/values/cnpg-system/plugin-barman-cloud/base/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: cnpg-system
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: restricted
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
