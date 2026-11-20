@@ -9,7 +9,6 @@ spec:
   - repoURL: ghcr.io/kserve/charts
     targetRevision: v0.21.0
     chart: kserve-crd
-    helm: {}
   - repoURL: ghcr.io/kserve/charts
     targetRevision: "v0.21.0"
     chart: kserve-resources
