@@ -79,7 +79,7 @@ Grafana, Loki (logs), Mimir (long-term metrics), Alloy (agent). Prometheus itsel
 - **kagent**, **ai-registry**, **agentregistry**, **overseerr-mcp** — agent runtime, model/agent registries, and an MCP server integration
 
 ### Media Stack (`media-management/` namespace)
-Radarr, Sonarr, Lidarr, Bazarr, Prowlarr, Flaresolverr, Tautulli, Seerr, Requestrr — all using the `bjw-s/app-template` Helm chart.
+Radarr, Sonarr, Lidarr, Bazarr, Prowlarr, Flaresolverr, Tautulli, Seerr — all using the `bjw-s/app-template` Helm chart.
 
 ## Adding a New Application
 
