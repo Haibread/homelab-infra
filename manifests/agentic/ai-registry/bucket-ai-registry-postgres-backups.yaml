@@ -1,0 +1,9 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  name: ai-registry-postgres-backups
+spec:
+  bucketName: ai-registry-postgres-backups
+  storageClassName: rook-ceph-bucket-main-retain

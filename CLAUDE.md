@@ -63,6 +63,7 @@ All applications use server-side apply and manual sync (no auto-sync):
 ### Storage
 - **Rook Ceph** for distributed storage (StorageClasses, CephBlockPools, etc.)
 - **CloudNative PG** (`cnpg-system/`) operator for PostgreSQL
+- **plugin-barman-cloud** (`cnpg-system/`) archives CNPG clusters' WAL and daily base backups to a per-database RGW bucket — see `ARCHITECTURE.md`
 
 ### TLS & Identity
 - **cert-manager** issues certificates
