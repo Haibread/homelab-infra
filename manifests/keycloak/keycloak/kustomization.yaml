@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
 - database.yaml
 - httproute.yaml
+- bucket-keycloak-pg-backups.yaml
+- objectstore-keycloak-pg.yaml
+- scheduledbackup-keycloak-pg.yaml

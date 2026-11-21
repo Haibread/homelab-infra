@@ -16,6 +16,9 @@ reconciles the cluster from it.
 
 Adding an application is described in [CLAUDE.md](CLAUDE.md).
 
+The reasoning behind the less obvious design choices, such as how the
+PostgreSQL databases are backed up, is in [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## Validation
 
 Nothing is deployed by CI — the `validate` workflow only checks that what is
