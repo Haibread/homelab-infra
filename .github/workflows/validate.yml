@@ -28,7 +28,7 @@ env:
   # renovate: datasource=github-releases depName=helm/helm extractVersion=^v(?<version>.+)$
   HELM_VERSION: "4.3.2"
   # renovate: datasource=npm depName=renovate
-  RENOVATE_VERSION: "44.257.5"
+  RENOVATE_VERSION: "44.257.9"
 
   # Kinds with CRD schemas in datreeio/CRDs-catalog that are too strict
   # (reject legitimate null values on optional object fields). Revisit when
