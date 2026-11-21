@@ -22,6 +22,27 @@ spec:
   destination:
     name: in-cluster
     namespace: envoy-gateway
+  ignoreDifferences:
+  - kind: Secret
+    name: ai-gateway-controller-file-id-encryption
+    namespace: envoy-gateway
+    jsonPointers:
+    - /data
+  - kind: Secret
+    name: ai-gateway-controller-mcp-session-encryption
+    namespace: envoy-gateway
+    jsonPointers:
+    - /data
+  - kind: Secret
+    name: self-signed-cert-for-mutating-webhook
+    namespace: envoy-gateway
+    jsonPointers:
+    - /data
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    name: envoy-ai-gateway-gateway-pod-mutator.envoy-gateway
+    jqPathExpressions:
+    - '.webhooks[]?.clientConfig.caBundle'
   syncPolicy:
     #automated:
     #  selfHeal: true
