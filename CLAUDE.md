@@ -72,6 +72,9 @@ All applications use server-side apply and manual sync (no auto-sync):
 ### Observability Stack
 Grafana, Loki (logs), Mimir (long-term metrics), Alloy (agent). Prometheus itself is not deployed as a standalone app — only `prometheus-crds` lives under `applications/monitoring/`; metric scraping is handled by Alloy shipping to Mimir.
 
+### Autoscaling
+- **KEDA** (`keda/`) serves `external.metrics.k8s.io` for `ScaledObject`s; Prometheus triggers query Mimir at `http://mimir-gateway.monitoring/prometheus` with `X-Scope-OrgID: platform-admin`
+
 ### Virtualization
 - **KubeVirt** runs VMs on the cluster (Multus provides their extra NICs)
 
