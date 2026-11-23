@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keda
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://kedacore.github.io/charts
+    targetRevision: "2.21.1"
+    chart: keda
+    helm:
+      valueFiles:
+      - $values/values/keda/keda/base/values.yaml
+  - repoURL: https://github.com/Haibread/homelab-infra.git
+    targetRevision: "main"
+    ref: values
+  destination:
+    name: in-cluster
+    namespace: keda
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: restricted
+    #automated:
+    #  selfHeal: true
+    #  prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    - CreateNamespace=true
+    - IncludeMutationWebhook=true
+    - RespectIgnoreDifferences=true
+    - ServerSideApply=true
+    - ServerSideDiff=true
+    - Validate=false
