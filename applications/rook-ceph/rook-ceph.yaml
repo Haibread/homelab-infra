@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
   - repoURL: https://charts.rook.io/release
-    targetRevision: "v1.21.2"
+    targetRevision: "v1.21.3"
     chart: rook-ceph
     helm:
       valueFiles:
