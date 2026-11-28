@@ -4,7 +4,7 @@ controllers:
       app:
         image:
           repository: lscr.io/linuxserver/lidarr
-          tag: 8.1.2135
+          tag: 3.1.6.5079-ls50
         env:
           PUID: "1000"
           PGID: "1000"

@@ -67,9 +67,10 @@
   ],
   "packageRules": [
     {
+      "description": "linuxserver.io images only take their immutable `<version>-ls<build>` tags. Tags without the `-ls` suffix float, and some are leftovers from old releases: lidarr `8.1.2135` (the 2021 0.8.1 build) outranks every 3.x release when the suffix is optional.",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["lscr.io/linuxserver/**"],
-      "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(\\.(?<build>\\d+))?(-ls(?<revision>\\d+))?$"
+      "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(\\.(?<build>\\d+))?-ls(?<revision>\\d+)$"
     },
     {
       "groupName": "*arr media stack",
